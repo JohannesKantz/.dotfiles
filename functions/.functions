@@ -4,13 +4,20 @@
 
 # returns the current git branch
 git_branch() {
-    local branch="$(git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/')"
-    [[ -z $branch ]] || printf "$branch "
+    local branch
+    branch="$(git symbolic-ref --quiet --short HEAD 2> /dev/null)" || return 0
+    [[ -n "$branch" ]] || return 0
+    printf '(%s) ' "$branch"
 }
 
 # create new dir and enter it
 mkd() {
-    mkdir -p "$@" && cd "$@"
+    if [[ $# -ne 1 ]]; then
+        echo "usage: mkd <directory>" >&2
+        return 1
+    fi
+
+    command mkdir -p -- "$1" && cd -- "$1"
 }
 
 # shell load time
@@ -18,46 +25,522 @@ mkd() {
 #       add "zmodload zsh/zprof" (without quotes) to the top top "~/.zshrc"
 #       and run "zprof" after restarting the shell
 shell_load_time() {
-    time $SHELL -i -c exit
+    time "$SHELL" -i -c exit
 }
 
 
-# get disto name (example: 'ubuntu', 'debian', 'manjaro', ...)
+_os_release_value() {
+    local key="$1"
+
+    [[ -r /etc/os-release ]] || return 1
+
+    command awk -F '=' -v key="$key" '$1 == key { gsub(/"/, "", $2); print $2; exit }' /etc/os-release
+}
+
+
+# get distro name (example: 'ubuntu', 'debian', 'manjaro', ...)
 get_distro() {
-    awk -F '=' '/^ID=/{print $2}' /etc/*-release
+    _os_release_value ID
 }
 
 # get name the distro it is based on (example: 'arch', 'debian', ...)
 get_distro_like() {
-    distro_like=$(awk -F '=' '/^ID_LIKE=/{print $2}' /etc/*-release)
-    if [[ ! "$distro_like" ]]; then
+    local distro_like
+
+    distro_like="$(_os_release_value ID_LIKE)"
+    if [[ -z "$distro_like" ]]; then
         distro_like=$(get_distro)
     fi
-    echo "$distro_like"
+
+    printf '%s\n' "$distro_like"
 }
 
 # get the operating system name (example: 'LINUX', 'WINDOWS', 'OSX', ...)
-function get_os() {
-    case "`uname`" in
+get_os() {
+    case "$(uname -s)" in
         Linux)
-            echo "LINUX";;
+            printf '%s\n' "LINUX" ;;
         Darwin)
-            echo "OSX";;
+            printf '%s\n' "OSX" ;;
         CYGWIN*|MINGW32*|MSYS*|MINGW*|WindowsNT)
-            echo "WINDOWS";;
+            printf '%s\n' "WINDOWS" ;;
         FreeBSD)
-            echo "BSD" ;;
+            printf '%s\n' "BSD" ;;
         SunOS)
-            echo "SOLARIS" ;;
+            printf '%s\n' "SOLARIS" ;;
         *)
-            echo "$OSTYPE" ;;
+            printf '%s\n' "$OSTYPE" ;;
     esac
 }
 
 lowercase(){
-    echo "$1" | awk '{ print tolower($0) }'
+    if [[ $# -gt 0 ]]; then
+        printf '%s\n' "$*" | tr '[:upper:]' '[:lower:]'
+    else
+        tr '[:upper:]' '[:lower:]'
+    fi
 }
 
 uppercase(){
-    echo "$1" | awk '{ print toupper($0) }'
+    if [[ $# -gt 0 ]]; then
+        printf '%s\n' "$*" | tr '[:lower:]' '[:upper:]'
+    else
+        tr '[:lower:]' '[:upper:]'
+    fi
+}
+
+
+# create timestamped backup copies
+bak() {
+    if [[ $# -lt 1 ]]; then
+        echo "usage: bak <path> [path ...]" >&2
+        return 1
+    fi
+
+    local src backup timestamp normalized
+    timestamp="$(date +%Y%m%d-%H%M%S)"
+
+    for src in "$@"; do
+        if [[ ! -e "$src" && ! -L "$src" ]]; then
+            echo "bak: not found: $src" >&2
+            return 1
+        fi
+
+        normalized="${src%/}"
+        [[ -n "$normalized" ]] || normalized="$src"
+        backup="${normalized}.bak.${timestamp}"
+
+        if [[ -e "$backup" || -L "$backup" ]]; then
+            backup="${backup}.$$"
+        fi
+
+        if [[ -d "$src" && ! -L "$src" ]]; then
+            command cp -R "$src" "$backup" || return 1
+        elif [[ -L "$src" ]]; then
+            command cp -P "$src" "$backup" || return 1
+        else
+            command cp -p "$src" "$backup" || return 1
+        fi
+
+        printf '%s -> %s\n' "$src" "$backup"
+    done
+}
+
+
+# move files to the OS trash when possible
+trash() {
+    if [[ $# -lt 1 ]]; then
+        echo "usage: trash <path> [path ...]" >&2
+        return 1
+    fi
+
+    local trash_bin
+
+    trash_bin="$(command -v trash 2>/dev/null)"
+    if [[ "$trash_bin" == */* ]]; then
+        command "$trash_bin" "$@"
+        return $?
+    fi
+
+    if command -v gio >/dev/null 2>&1; then
+        command gio trash "$@"
+        return $?
+    fi
+
+    if command -v trash-put >/dev/null 2>&1; then
+        command trash-put "$@"
+        return $?
+    fi
+
+    local trash_dir src base target timestamp
+
+    case "$(get_os)" in
+        OSX)
+            trash_dir="$HOME/.Trash"
+            ;;
+        LINUX)
+            trash_dir="${XDG_DATA_HOME:-$HOME/.local/share}/Trash/files"
+            ;;
+        *)
+            echo "trash: no supported trash backend found" >&2
+            return 1
+            ;;
+    esac
+
+    command mkdir -p "$trash_dir" || return 1
+
+    for src in "$@"; do
+        if [[ ! -e "$src" && ! -L "$src" ]]; then
+            echo "trash: not found: $src" >&2
+            return 1
+        fi
+
+        base="${src%/}"
+        base="${base##*/}"
+        target="$trash_dir/$base"
+
+        if [[ -e "$target" || -L "$target" ]]; then
+            timestamp="$(date +%Y%m%d-%H%M%S)"
+            target="$trash_dir/${base}.${timestamp}.$$"
+        fi
+
+        command mv "$src" "$target" || return 1
+        printf '%s -> %s\n' "$src" "$target"
+    done
+}
+
+
+# swap the names of two paths
+swap() {
+    if [[ $# -ne 2 ]]; then
+        echo "usage: swap <path-a> <path-b>" >&2
+        return 1
+    fi
+
+    local path_a="$1"
+    local path_b="$2"
+    local temp_path
+
+    if [[ ! -e "$path_a" && ! -L "$path_a" ]]; then
+        echo "swap: not found: $path_a" >&2
+        return 1
+    fi
+
+    if [[ ! -e "$path_b" && ! -L "$path_b" ]]; then
+        echo "swap: not found: $path_b" >&2
+        return 1
+    fi
+
+    temp_path="${path_a%/}.swap.$$.$RANDOM"
+    while [[ -e "$temp_path" || -L "$temp_path" ]]; do
+        temp_path="${path_a%/}.swap.$$.$RANDOM"
+    done
+
+    command mv "$path_a" "$temp_path" || return 1
+
+    if ! command mv "$path_b" "$path_a"; then
+        command mv "$temp_path" "$path_a"
+        return 1
+    fi
+
+    if ! command mv "$temp_path" "$path_b"; then
+        command mv "$path_a" "$path_b" >/dev/null 2>&1
+        command mv "$temp_path" "$path_a" >/dev/null 2>&1
+        return 1
+    fi
+
+    printf '%s <-> %s\n' "$path_a" "$path_b"
+}
+
+
+# extract common archive types
+extract() {
+    if [[ $# -ne 1 ]]; then
+        echo "usage: extract <archive>" >&2
+        return 1
+    fi
+
+    if [[ ! -f "$1" ]]; then
+        echo "extract: not a file: $1" >&2
+        return 1
+    fi
+
+    case "$(lowercase "$1")" in
+        *.tar.gz|*.tgz)
+            command tar xzf "$1"
+            ;;
+        *.tar.bz2|*.tbz2)
+            command tar xjf "$1"
+            ;;
+        *.tar.xz|*.txz)
+            command tar xJf "$1"
+            ;;
+        *.tar)
+            command tar xf "$1"
+            ;;
+        *.zip)
+            command unzip "$1"
+            ;;
+        *.gz)
+            command gunzip "$1"
+            ;;
+        *.bz2)
+            command bunzip2 "$1"
+            ;;
+        *.xz)
+            command unxz "$1"
+            ;;
+        *.7z)
+            command 7z x "$1"
+            ;;
+        *.rar)
+            if command -v unrar >/dev/null 2>&1; then
+                command unrar x "$1"
+            else
+                command 7z x "$1"
+            fi
+            ;;
+        *)
+            echo "extract: unsupported archive: $1" >&2
+            return 1
+            ;;
+    esac
+}
+
+
+# create a tar.gz archive from a path
+compress() {
+    if [[ $# -lt 1 || $# -gt 2 ]]; then
+        echo "usage: compress <path> [archive.tar.gz]" >&2
+        return 1
+    fi
+
+    local src src_name src_dir out cwd
+    src="${1%/}"
+    [[ -n "$src" ]] || src="$1"
+
+    if [[ -z "$src" || ( ! -e "$src" && ! -L "$src" ) ]]; then
+        echo "compress: not found: $1" >&2
+        return 1
+    fi
+
+    src_name="${src##*/}"
+    src_dir="."
+    cwd="$(pwd)"
+
+    if [[ "$src" == */* ]]; then
+        src_dir="${src%/*}"
+        [[ -n "$src_dir" ]] || src_dir="/"
+    fi
+
+    out="${2:-${src_name}.tar.gz}"
+
+    if [[ "$out" != /* ]]; then
+        out="$cwd/$out"
+    fi
+
+    if [[ -e "$out" || -L "$out" ]]; then
+        echo "compress: output exists: $out" >&2
+        return 1
+    fi
+
+    (
+        cd "$src_dir" &&
+        command tar czf "$out" "$src_name"
+    ) || return 1
+
+    printf '%s\n' "$out"
+}
+
+
+# create a zip archive from a directory
+zipdir() {
+    if [[ $# -lt 1 || $# -gt 2 ]]; then
+        echo "usage: zipdir <directory> [archive.zip]" >&2
+        return 1
+    fi
+
+    local dir dir_name dir_parent out cwd
+    dir="${1%/}"
+    [[ -n "$dir" ]] || dir="$1"
+
+    if [[ ! -d "$dir" ]]; then
+        echo "zipdir: not a directory: $1" >&2
+        return 1
+    fi
+
+    if ! command -v zip >/dev/null 2>&1; then
+        echo "zipdir: zip is required" >&2
+        return 1
+    fi
+
+    dir_name="${dir##*/}"
+    dir_parent="."
+    cwd="$(pwd)"
+
+    if [[ "$dir" == */* ]]; then
+        dir_parent="${dir%/*}"
+        [[ -n "$dir_parent" ]] || dir_parent="/"
+    fi
+
+    out="${2:-${dir_name}.zip}"
+
+    if [[ "$out" != /* ]]; then
+        out="$cwd/$out"
+    fi
+
+    if [[ -e "$out" || -L "$out" ]]; then
+        echo "zipdir: output exists: $out" >&2
+        return 1
+    fi
+
+    (
+        cd "$dir_parent" &&
+        command zip -r "$out" "$dir_name"
+    ) || return 1
+
+    printf '%s\n' "$out"
+}
+
+
+# remove empty directories under a path
+clean_empty_dirs() {
+    local dry_run=0
+    local target="."
+
+    if [[ "$1" == "-n" || "$1" == "--dry-run" ]]; then
+        dry_run=1
+        shift
+    fi
+
+    if [[ $# -gt 1 ]]; then
+        echo "usage: clean_empty_dirs [-n|--dry-run] [path]" >&2
+        return 1
+    fi
+
+    if [[ $# -eq 1 ]]; then
+        target="$1"
+    fi
+
+    if [[ ! -d "$target" ]]; then
+        echo "clean_empty_dirs: not a directory: $target" >&2
+        return 1
+    fi
+
+    if [[ "$dry_run" -eq 1 ]]; then
+        command find "$target" -depth -mindepth 1 -type d -empty -print
+    else
+        command find "$target" -depth -mindepth 1 -type d -empty -print -exec rmdir {} \;
+    fi
+}
+
+
+# repeat a string a fixed number of times
+repeat_text() {
+    if [[ $# -lt 2 ]]; then
+        echo "usage: repeat_text <count> <text>" >&2
+        return 1
+    fi
+
+    local count="$1"
+    shift
+
+    case "$count" in
+        ''|*[!0-9]*)
+            echo "repeat_text: count must be a non-negative integer" >&2
+            return 1
+            ;;
+    esac
+
+    while [[ "$count" -gt 0 ]]; do
+        printf '%s' "$*"
+        count=$((count - 1))
+    done
+
+    printf '\n'
+}
+
+if [[ -z "$ZSH_VERSION" ]]; then
+    function repeat {
+        repeat_text "$@"
+    }
+fi
+
+
+# trim leading and trailing whitespace
+trim() {
+    if [[ $# -gt 0 ]]; then
+        printf '%s\n' "$*" | command sed 's/^[[:space:]]*//; s/[[:space:]]*$//'
+    else
+        command sed 's/^[[:space:]]*//; s/[[:space:]]*$//'
+    fi
+}
+
+
+# generate a UUID with portable fallbacks
+uuid() {
+    if command -v uuidgen >/dev/null 2>&1; then
+        command uuidgen | tr '[:upper:]' '[:lower:]'
+        return 0
+    fi
+
+    if command -v python3 >/dev/null 2>&1; then
+        command python3 -c 'import uuid; print(uuid.uuid4())'
+        return 0
+    fi
+
+    if command -v openssl >/dev/null 2>&1; then
+        local hex variant
+        hex="$(command openssl rand -hex 16)" || return 1
+        variant=$(( (16#${hex:16:1} & 3) | 8 ))
+        printf '%s-%s-4%s-%x%s-%s\n' \
+            "${hex:0:8}" "${hex:8:4}" "${hex:13:3}" "$variant" "${hex:17:3}" "${hex:20:12}"
+        return 0
+    fi
+
+    echo "uuid: uuidgen, python3, or openssl is required" >&2
+    return 1
+}
+
+
+# generate random hex characters
+randhex() {
+    local length="${1:-32}"
+    local bytes
+
+    case "$length" in
+        ''|*[!0-9]*)
+            echo "randhex: length must be a positive integer" >&2
+            return 1
+            ;;
+    esac
+
+    if [[ "$length" -lt 1 ]]; then
+        echo "randhex: length must be a positive integer" >&2
+        return 1
+    fi
+
+    bytes=$(( (length + 1) / 2 ))
+
+    if command -v openssl >/dev/null 2>&1; then
+        command openssl rand -hex "$bytes" | cut -c1-"$length"
+        return 0
+    fi
+
+    if [[ -r /dev/urandom ]]; then
+        command od -An -N "$bytes" -tx1 /dev/urandom | tr -d ' \n' | cut -c1-"$length"
+        printf '\n'
+        return 0
+    fi
+
+    echo "randhex: openssl or /dev/urandom is required" >&2
+    return 1
+}
+
+
+# base64 encode strings or stdin
+b64e() {
+    if [[ $# -gt 0 ]]; then
+        printf '%s' "$*" | command base64 | tr -d '\n'
+    else
+        command base64 | tr -d '\n'
+    fi
+
+    printf '\n'
+}
+
+
+# base64 decode strings or stdin
+b64d() {
+    local decode_flag="-d"
+
+    if [[ "$(get_os)" == "OSX" ]]; then
+        decode_flag="-D"
+    fi
+
+    if [[ $# -gt 0 ]]; then
+        printf '%s' "$*" | command base64 "$decode_flag"
+    else
+        command base64 "$decode_flag"
+    fi
 }
