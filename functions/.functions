@@ -544,3 +544,51 @@ b64d() {
         command base64 "$decode_flag"
     fi
 }
+
+
+# show process(es) listening on a port
+whichport() {
+    if [[ $# -ne 1 ]]; then
+        echo "usage: whichport <port>" >&2
+        return 1
+    fi
+
+    local pids
+    pids="$(lsof -ti :"$1")"
+
+    if [[ -z "$pids" ]]; then
+        echo "whichport: nothing listening on port $1" >&2
+        return 1
+    fi
+
+    lsof -i :"$1" -P -n | grep LISTEN
+}
+
+
+# kill all processes listening on a port
+killport() {
+    if [[ $# -ne 1 ]]; then
+        echo "usage: killport <port>" >&2
+        return 1
+    fi
+
+    local port="$1"
+    local pids
+
+    pids="$(lsof -ti :"$port")"
+
+    if [[ -z "$pids" ]]; then
+        echo "killport: nothing listening on port $port" >&2
+        return 1
+    fi
+
+    echo "Processes on port $port:"
+    echo "$pids" | xargs ps -p 2>/dev/null | tail -n +2
+
+    printf 'Kill %s? [y/N] ' "$pids"
+    read -r reply
+    [[ "$reply" =~ ^[Yy]$ ]] || { echo "Aborted."; return 0; }
+
+    echo "$pids" | xargs kill -9
+    echo "Killed."
+}

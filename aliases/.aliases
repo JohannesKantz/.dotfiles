@@ -100,13 +100,18 @@ alias mkzip="zip -r"                    # zip a folder
 
 
 # Process
-alias psg="ps aux | grep -v grep | grep"  # psg python
 alias kill9="kill -9"
 
 
 # Network
 alias myip="curl -s https://ifconfig.me"          # public IP
 alias ports="lsof -i -P -n | grep LISTEN"         # listening ports
+
+
+# Text
+alias lines="wc -l"                               # cat file.txt | lines
+alias words="wc -w"                               # cat file.txt | words
+alias chars="wc -c"                               # cat file.txt | chars
 
 
 # Python
