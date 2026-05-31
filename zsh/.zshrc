@@ -94,24 +94,37 @@ fpath=("$ZSH_COMPLETION_DIR" $fpath)
 
 if (( $+commands[gh] )) &&
     [[ ! -s "$ZSH_COMPLETION_DIR/_gh" || "${commands[gh]}" -nt "$ZSH_COMPLETION_DIR/_gh" ]]; then
-    gh completion --shell zsh > "$ZSH_COMPLETION_DIR/_gh"
+    gh completion --shell zsh > "$ZSH_COMPLETION_DIR/_gh.tmp.$$" &&
+        command mv "$ZSH_COMPLETION_DIR/_gh.tmp.$$" "$ZSH_COMPLETION_DIR/_gh"
+    command rm -f "$ZSH_COMPLETION_DIR/_gh.tmp.$$"
 fi
 
 if (( $+commands[mise] )) &&
     [[ ! -s "$ZSH_COMPLETION_DIR/_mise" || "${commands[mise]}" -nt "$ZSH_COMPLETION_DIR/_mise" ]]; then
-    mise completion zsh > "$ZSH_COMPLETION_DIR/_mise"
+    mise completion zsh > "$ZSH_COMPLETION_DIR/_mise.tmp.$$" &&
+        command mv "$ZSH_COMPLETION_DIR/_mise.tmp.$$" "$ZSH_COMPLETION_DIR/_mise"
+    command rm -f "$ZSH_COMPLETION_DIR/_mise.tmp.$$"
 fi
 
 if (( $+commands[bun] )) &&
     [[ ! -s "$ZSH_COMPLETION_DIR/_bun" || "${commands[bun]}" -nt "$ZSH_COMPLETION_DIR/_bun" ]]; then
-    SHELL=zsh bun completions > "$ZSH_COMPLETION_DIR/_bun"
+    SHELL=zsh bun completions > "$ZSH_COMPLETION_DIR/_bun.tmp.$$" &&
+        command mv "$ZSH_COMPLETION_DIR/_bun.tmp.$$" "$ZSH_COMPLETION_DIR/_bun"
+    command rm -f "$ZSH_COMPLETION_DIR/_bun.tmp.$$"
 fi
 
 if (( $+commands[rustup] && $+commands[cargo] )); then
-    [[ -s "$ZSH_COMPLETION_DIR/_rustup" && ! "${commands[rustup]}" -nt "$ZSH_COMPLETION_DIR/_rustup" ]] ||
-        rustup completions zsh > "$ZSH_COMPLETION_DIR/_rustup"
-    [[ -s "$ZSH_COMPLETION_DIR/_cargo" && ! "${commands[rustup]}" -nt "$ZSH_COMPLETION_DIR/_cargo" ]] ||
-        rustup completions zsh cargo > "$ZSH_COMPLETION_DIR/_cargo"
+    if [[ ! -s "$ZSH_COMPLETION_DIR/_rustup" || "${commands[rustup]}" -nt "$ZSH_COMPLETION_DIR/_rustup" ]]; then
+        rustup completions zsh > "$ZSH_COMPLETION_DIR/_rustup.tmp.$$" &&
+            command mv "$ZSH_COMPLETION_DIR/_rustup.tmp.$$" "$ZSH_COMPLETION_DIR/_rustup"
+        command rm -f "$ZSH_COMPLETION_DIR/_rustup.tmp.$$"
+    fi
+
+    if [[ ! -s "$ZSH_COMPLETION_DIR/_cargo" || "${commands[rustup]}" -nt "$ZSH_COMPLETION_DIR/_cargo" ]]; then
+        rustup completions zsh cargo > "$ZSH_COMPLETION_DIR/_cargo.tmp.$$" &&
+            command mv "$ZSH_COMPLETION_DIR/_cargo.tmp.$$" "$ZSH_COMPLETION_DIR/_cargo"
+        command rm -f "$ZSH_COMPLETION_DIR/_cargo.tmp.$$"
+    fi
 fi
 
 autoload -Uz compinit
