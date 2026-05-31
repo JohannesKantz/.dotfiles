@@ -1,8 +1,8 @@
 tap "nikitabobko/tap"
 
-brew "fnm"
 brew "gh"
 brew "git"
+brew "mise"
 brew "stow"
 brew "vim"
 

@@ -86,11 +86,6 @@ if [[ -f "$HOME/.antidote/antidote.zsh" ]]; then
     antidote load
 fi
 
-if (( $+commands[fnm] )); then
-    eval "$(fnm env --use-on-cd --shell zsh)"
-fi
-
-
 ##################
 # USER SETTINGS  #
 ##################
