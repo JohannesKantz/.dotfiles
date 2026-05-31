@@ -35,8 +35,3 @@ fi
 
 # Prompt
 export PS1='$(git_branch)\[\033[38;5;2m\]\w\[$(tput sgr0)\] \\$ \[$(tput sgr0)\]'
-
-
-# dotfiles config
-alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
-
