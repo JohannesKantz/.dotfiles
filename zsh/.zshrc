@@ -12,63 +12,8 @@ setopt APPEND_HISTORY       # append history to the history file, rather than re
 setopt HISTIGNOREDUPS       # prevents the current line from being saved in the history if it is the same as the previous one
 setopt HISTIGNORESPACE      # prevents the current line from being saved if it begins with a space
 
-
-#############
-# oh-my-zsh #
-#############
-
-# compdump cache file
-export ZSH_COMPDUMP=$ZSH/cache/.zcompdump-$HOST
-
-# Path to your oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
-
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time oh-my-zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="robbyrussell"
-
-# Uncomment one of the following lines to change the auto-update behavior
-# zstyle ':omz:update' mode disabled  # disable automatic updates
-# zstyle ':omz:update' mode auto      # update automatically without asking
-# zstyle ':omz:update' mode reminder  # just remind me to update when it's time
-
-# Uncomment the following line to change how often to auto-update (in days).
-# zstyle ':omz:update' frequency 13
-
-# Uncomment the following line to disable auto-setting terminal title.
 DISABLE_AUTO_TITLE="true"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-# You can also set it to another string to have that shown instead of the default red dots.
-# e.g. COMPLETION_WAITING_DOTS="%F{yellow}waiting...%f"
-# Caution: this setting can cause issues with multiline prompts in zsh < 5.7.1 (see #5765)
 COMPLETION_WAITING_DOTS="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-
-
-#############
-#  PLUGINS  #
-#############
-
-plugins=(
-    extract                     # (https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/extract)
-    git                         # (https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git)
-    gh                          # (https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/gh)
-    zsh-syntax-highlighting     # (https://github.com/zsh-users/zsh-syntax-highlighting)
-    zsh-autosuggestions         # (https://github.com/zsh-users/zsh-autosuggestions)
-    fnm                         # (https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/fnm)
-    rust                        # (https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/rust)
-)
-
-
-
 
 ################
 #  COMPLETION  #
@@ -122,12 +67,23 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
 
-#autoload -Uz compinit && compinit -d
-#autoload -Uz +X bashcompinit && bashcompinit -D
+# Bind arrow keys for history substring search.
+function hss-bindkey() {
+    zmodload zsh/terminfo
+    for keymap in main emacs viins; do
+        bindkey -M "$keymap" "$terminfo[kcuu1]" history-substring-search-up
+        bindkey -M "$keymap" "$terminfo[kcud1]" history-substring-search-down
+    done
+}
 
+if [[ ! -d "$HOME/.antidote" ]]; then
+    git clone --depth=1 https://github.com/mattmc3/antidote.git "$HOME/.antidote"
+fi
 
-# oh my zsh
-[[ -f "$ZSH/oh-my-zsh.sh" ]] && source "$ZSH/oh-my-zsh.sh"
+if [[ -f "$HOME/.antidote/antidote.zsh" ]]; then
+    source "$HOME/.antidote/antidote.zsh"
+    antidote load
+fi
 
 
 ##################
@@ -155,5 +111,3 @@ alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
 # bun completions
 [ -s "/Users/johanneskantz/.bun/_bun" ] && source "/Users/johanneskantz/.bun/_bun"
-
-

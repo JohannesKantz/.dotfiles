@@ -51,6 +51,17 @@ Edit linked files normally:
 vim ~/.zshrc
 ```
 
+## Zsh Plugins
+
+```bash
+antidote install <user/repository>
+antidote list
+antidote update
+```
+
+Plugins are listed in `~/.zsh_plugins.txt`. Antidote installs itself when Zsh
+starts for the first time.
+
 ## Add A Dotfile
 
 The first directory is the Stow package. Everything below it is the path inside
@@ -98,4 +109,3 @@ macos/ linux/
 install/
     Package lists and setup scripts. Do not pass this folder to Stow.
 ```
-
