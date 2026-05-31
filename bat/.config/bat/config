@@ -1,0 +1,17 @@
+# Bat configuration
+# https://github.com/sharkdp/bat
+
+# Theme — matches vim gruvbox
+--theme="gruvbox-dark"
+
+# Show line numbers, git change markers, and the filename header
+--style="numbers,changes,header"
+
+# Use a pager only when output doesn't fit the screen
+--paging=auto
+
+# Treat these extensions as known syntaxes
+--map-syntax="*.aliases:Bourne Again Shell (bash)"
+--map-syntax="*.functions:Bourne Again Shell (bash)"
+--map-syntax="*.conf:INI"
+--map-syntax="*.toml:TOML"

@@ -1,0 +1,17 @@
+# Ripgrep configuration
+# https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md#configuration-file
+
+# Case-insensitive search unless the pattern has uppercase letters
+--smart-case
+
+# Search hidden files and directories
+--hidden
+
+# Always exclude these paths
+--glob=!.git/
+--glob=!node_modules/
+--glob=!.DS_Store
+--glob=!*.lock
+--glob=!dist/
+--glob=!build/
+--glob=!.cache/

@@ -21,12 +21,12 @@ Preview and link files:
 
 ```bash
 # macOS
-stow -n -v -t "$HOME" aliases bash fastfetch functions ghostty git kitty macos neofetch tmux vim zsh
-stow -v -t "$HOME" aliases bash fastfetch functions ghostty git kitty macos neofetch tmux vim zsh
+stow -n -v -t "$HOME" aliases bash bat btop curl fastfetch functions ghostty git kitty macos mise neofetch ripgrep tmux vim wget zsh
+stow -v -t "$HOME" aliases bash bat btop curl fastfetch functions ghostty git kitty macos mise neofetch ripgrep tmux vim wget zsh
 
 # Linux
-stow -n -v -t "$HOME" aliases bash fastfetch functions ghostty git kitty linux neofetch tmux vim zsh
-stow -v -t "$HOME" aliases bash fastfetch functions ghostty git kitty linux neofetch tmux vim zsh
+stow -n -v -t "$HOME" aliases bash bat btop curl fastfetch functions ghostty git kitty linux mise neofetch ripgrep tmux vim wget zsh
+stow -v -t "$HOME" aliases bash bat btop curl fastfetch functions ghostty git kitty linux mise neofetch ripgrep tmux vim wget zsh
 ```
 
 `-n` previews changes. Remove it after checking the output. Existing files must
@@ -100,7 +100,7 @@ stow -D -v -t "$HOME" tmux
 ## Folders
 
 ```text
-aliases/ functions/ bash/ fastfetch/ ghostty/ git/ kitty/ neofetch/ tmux/ vim/ zsh/
+aliases/ bash/ bat/ btop/ curl/ fastfetch/ functions/ ghostty/ git/ kitty/ mise/ neofetch/ ripgrep/ tmux/ vim/ wget/ zsh/
     Shared macOS and Linux Stow packages
 
 macos/ linux/

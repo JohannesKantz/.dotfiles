@@ -8,6 +8,9 @@ export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 #export LANGUAGE=en_US
 
+export RIPGREP_CONFIG_PATH="$HOME/.config/ripgrep/config"
+export WGETRC="$HOME/.config/wget/wgetrc"
+
 # if running bash
 if [ -n "$BASH_VERSION" ]; then
     if [ -f "$HOME/.bashrc" ]; then

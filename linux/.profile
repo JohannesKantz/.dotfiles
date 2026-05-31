@@ -7,6 +7,9 @@ export VISUAL='vim'
 #export LANG=en_US.UTF-8
 #export LANGUAGE=en_US
 
+export RIPGREP_CONFIG_PATH="$HOME/.config/ripgrep/config"
+export WGETRC="$HOME/.config/wget/wgetrc"
+
 # if running bash
 if [ -n "$BASH_VERSION" ]; then
     # include .bashrc if it exists
