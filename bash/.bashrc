@@ -3,10 +3,13 @@
 [[ $- != *i* ]] && return
 
 
+#############
+#  HISTORY  #
+#############
 
-export HISTSIZE=10000   # store 10000 commands in history buffer
-export HISTFILESIZE=${HISTSIZE}
-export HISTCONTROL=ignoreboth:erasedupes
+export HISTSIZE=50000
+export HISTFILESIZE=50000
+export HISTCONTROL=ignoreboth:erasedups
 
 # Shell Options
 shopt -s cdspell        # autocorrect cd misplelling
@@ -17,7 +20,10 @@ shopt -s dotglob        # include .files in the expasion of *
 shopt -s histappend     # Enable history appending instead of overwriting.
 
 
-# bash-completion
+################
+#  COMPLETION  #
+################
+
 complete -cf sudo
 if ! shopt -oq posix; then
   if [ -f /usr/share/bash-completion/bash_completion ]; then
@@ -27,11 +33,29 @@ if ! shopt -oq posix; then
   fi
 fi
 
+
+#######################
+#  SHELL INTEGRATION  #
+#######################
+
+if command -v mise >/dev/null 2>&1; then
+    eval "$(mise activate bash)"
+fi
+
+
+###################
+#  USER SETTINGS  #
+###################
+
 # load aliases
 [[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
 
 # load functions
 [[ -f "$HOME/.functions" ]] && source "$HOME/.functions"
 
-# Prompt
-export PS1='$(git_branch)\[\033[38;5;2m\]\w\[$(tput sgr0)\] \\$ \[$(tput sgr0)\]'
+
+############
+#  PROMPT  #
+############
+
+export PS1='$(git_branch)\[\033[38;5;2m\]\w\[$(tput sgr0)\] \$ \[$(tput sgr0)\]'

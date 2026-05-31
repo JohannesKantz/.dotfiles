@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-packages=(bash curl git stow vim zsh)
+packages=(bash bat btop curl fd-find fzf gh git jq ripgrep stow tmux tree vim wget zsh)
+
+# zoxide and mise are not in standard repos; install via their official scripts if missing:
+#   zoxide:  curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+#   mise:    curl https://mise.run | sh
+#   yt-dlp:  pip3 install -U yt-dlp
 
 if command -v apt-get >/dev/null 2>&1; then
     sudo apt-get update
