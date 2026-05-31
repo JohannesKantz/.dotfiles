@@ -20,7 +20,7 @@ setopt PUSHD_SILENT         # don't print the directory stack after pushd or pop
 
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=50000
-SAVEHIST=10000
+SAVEHIST=50000
 
 setopt APPEND_HISTORY           # append history to the history file, rather than replace it
 setopt EXTENDED_HISTORY         # save timestamps and durations

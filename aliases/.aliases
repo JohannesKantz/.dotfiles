@@ -49,8 +49,13 @@ alias quit="exit"
 
 
 # ls
-alias ls="ls --color=auto"
-alias ll="ls -lahF"
+if [ "$(uname)" = "Darwin" ]; then
+    alias ls="ls -G"
+    alias ll="ls -G -lahF"
+else
+    alias ls="ls --color=auto"
+    alias ll="ls --color=auto -lahF"
+fi
 alias la="ll"
 alias ll-date="ll -tr"                  # sort by date
 alias ll-ext="ll -XB"                   # sort by extension
@@ -153,4 +158,12 @@ alias yt1080='yt-dlp -f "bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/bes
 alias yt720='yt-dlp -f "bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720]" --merge-output-format mp4 -o "%(title)s.%(ext)s"'
 alias yt480='yt-dlp -f "bestvideo[height<=480][ext=mp4]+bestaudio[ext=m4a]/best[height<=480]" --merge-output-format mp4 -o "%(title)s.%(ext)s"'
 alias yt360='yt-dlp -f "bestvideo[height<=360][ext=mp4]+bestaudio[ext=m4a]/best[height<=360]" --merge-output-format mp4 -o "%(title)s.%(ext)s"'
+
+
+# Neofetch
+alias neofetch_small="neofetch --config ~/.config/neofetch/smallfetch.conf"
+alias neofetch_better="neofetch --config ~/.config/neofetch/betterconfig.conf"
+alias neofetch_boxes="neofetch --config ~/.config/neofetch/boxes.conf"
+alias neofetch_onrefetch="neofetch --config ~/.config/neofetch/onrefetch.conf"
+alias neofetch_papirus="neofetch --config ~/.config/neofetch/papirus.conf"
 

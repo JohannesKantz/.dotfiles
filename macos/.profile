@@ -8,6 +8,13 @@ export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 #export LANGUAGE=en_US
 
+# if running bash
+if [ -n "$BASH_VERSION" ]; then
+    if [ -f "$HOME/.bashrc" ]; then
+        \. "$HOME/.bashrc"
+    fi
+fi
+
 ##########
 #  PATH  #
 ##########
@@ -40,3 +47,7 @@ fi
 # Bun
 export BUN_INSTALL="$HOME/.bun"
 [ -d "$BUN_INSTALL/bin" ] && PATH="$BUN_INSTALL/bin:$PATH"
+
+# Deno
+export DENO_INSTALL="$HOME/.deno"
+[ -d "$DENO_INSTALL/bin" ] && PATH="$DENO_INSTALL/bin:$PATH"

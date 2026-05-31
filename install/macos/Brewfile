@@ -1,10 +1,16 @@
 tap "nikitabobko/tap"
 
+brew "bat"
+brew "fd"
+brew "fastfetch"
+brew "fzf"
 brew "gh"
 brew "git"
 brew "mise"
+brew "ripgrep"
 brew "stow"
 brew "vim"
+brew "zoxide"
 
 cask "aerospace"
 cask "ghostty"

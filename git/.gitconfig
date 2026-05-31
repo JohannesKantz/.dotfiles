@@ -61,3 +61,15 @@
 [pull]
 	rebase = true
 
+[push]
+	autoSetupRemote = true
+
+[diff]
+	algorithm = histogram
+
+[rerere]
+	enabled = true
+
+[branch]
+	sort = -committerdate
+
