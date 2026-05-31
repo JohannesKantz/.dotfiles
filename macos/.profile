@@ -32,10 +32,10 @@ export PATH=/opt/homebrew/bin:$PATH
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 
 #jabba
-[ -s "/Users/johanneskantz/.jabba/jabba.sh" ] && source "/Users/johanneskantz/.jabba/jabba.sh"
+[ -s "$HOME/.jabba/jabba.sh" ] && source "$HOME/.jabba/jabba.sh"
 
 # Added by Toolbox App
-export PATH="$PATH:/Users/johanneskantz/Library/Application Support/JetBrains/Toolbox/scripts"
+export PATH="$PATH:$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
 
 # cargo
 [ -s "$HOME/.cargo/env" ] && \. "$HOME/.cargo/env"

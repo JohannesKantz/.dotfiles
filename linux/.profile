@@ -31,7 +31,7 @@ fi
 
 
 # fnm
-export PATH=/home/johannes/.fnm:$PATH
+export PATH="$HOME/.fnm:$PATH"
 eval "`fnm env`"
 
 #cargo
@@ -40,9 +40,6 @@ eval "`fnm env`"
 #deno
 export DENO_INSTALL="$HOME/.deno"
 export PATH="$DENO_INSTALL/bin:$PATH"
-
-# bun completions
-[ -s "/home/johannes/.bun/_bun" ] && source "/home/johannes/.bun/_bun"
 
 # bun
 export BUN_INSTALL="$HOME/.bun"

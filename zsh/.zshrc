@@ -62,9 +62,10 @@ zstyle ':completion:*:rm:*' file-patterns '*:all-files'
 #   example: "fg=#ff00ff,bg=cyan,bold,underline"
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=8'
 # defines how suggestions are generated
+#   match_prev_cmd: chooses a suggestion based on the current input and the previous command (default)
 #   history: chooses the most recent match from history
 #   completion: chooses a suggestion based on what tab-completion would suggest (requires zpty module)
-ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+ZSH_AUTOSUGGEST_STRATEGY=(match_prev_cmd history completion)
 
 
 # Bind arrow keys for history substring search.
@@ -102,12 +103,3 @@ fi
 ############
 
 PROMPT='$(git_branch)%F{green}%~ %F{white}$ '
-
-
-# dotfiles config
-alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
-
-
-
-# bun completions
-[ -s "/Users/johanneskantz/.bun/_bun" ] && source "/Users/johanneskantz/.bun/_bun"
