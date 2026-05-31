@@ -15,32 +15,24 @@ if [ -n "$BASH_VERSION" ]; then
     fi
 fi
 
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ] ; then
-    PATH="$HOME/bin:$PATH"
-fi
-
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/.local/bin" ] ; then
-    PATH="$HOME/.local/bin:$PATH"
-fi
-
 ##########
 #  PATH  #
 ##########
 
+# user binaries
+[ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
+[ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH"
 
 # fnm
-export PATH="$HOME/.fnm:$PATH"
-eval "`fnm env`"
+[ -d "$HOME/.fnm" ] && PATH="$HOME/.fnm:$PATH"
 
-#cargo
+# Cargo
 [ -s "$HOME/.cargo/env" ] && \. "$HOME/.cargo/env"
 
-#deno
+# Deno
 export DENO_INSTALL="$HOME/.deno"
-export PATH="$DENO_INSTALL/bin:$PATH"
+[ -d "$DENO_INSTALL/bin" ] && PATH="$DENO_INSTALL/bin:$PATH"
 
-# bun
+# Bun
 export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
+[ -d "$BUN_INSTALL/bin" ] && PATH="$BUN_INSTALL/bin:$PATH"

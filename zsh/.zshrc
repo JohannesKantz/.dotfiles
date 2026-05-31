@@ -77,13 +77,17 @@ function hss-bindkey() {
     done
 }
 
-if [[ ! -d "$HOME/.antidote" ]]; then
+if [[ ! -d "$HOME/.antidote" ]] && (( $+commands[git] )); then
     git clone --depth=1 https://github.com/mattmc3/antidote.git "$HOME/.antidote"
 fi
 
 if [[ -f "$HOME/.antidote/antidote.zsh" ]]; then
     source "$HOME/.antidote/antidote.zsh"
     antidote load
+fi
+
+if (( $+commands[fnm] )); then
+    eval "$(fnm env --use-on-cd --shell zsh)"
 fi
 
 

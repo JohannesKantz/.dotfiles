@@ -8,41 +8,35 @@ export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 #export LANGUAGE=en_US
 
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ] ; then
-    PATH="$HOME/bin:$PATH"
+##########
+#  PATH  #
+##########
+
+# user binaries
+[ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
+[ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH"
+
+# Homebrew
+if [ -x /opt/homebrew/bin/brew ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [ -x /usr/local/bin/brew ]; then
+    eval "$(/usr/local/bin/brew shellenv)"
 fi
 
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/.local/bin" ] ; then
-    PATH="$HOME/.local/bin:$PATH"
-fi
+# VS Code
+[ -d "/Applications/Visual Studio Code.app/Contents/Resources/app/bin" ] &&
+    PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 
-# homebrew
-eval $(/opt/homebrew/bin/brew shellenv)
+# Jabba
+[ -s "$HOME/.jabba/jabba.sh" ] && . "$HOME/.jabba/jabba.sh"
 
-########
-# Path #
-########
+# JetBrains Toolbox
+[ -d "$HOME/Library/Application Support/JetBrains/Toolbox/scripts" ] &&
+    PATH="$PATH:$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
 
-#brew
-export PATH=/opt/homebrew/bin:$PATH
-
-#code
-export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
-
-#jabba
-[ -s "$HOME/.jabba/jabba.sh" ] && source "$HOME/.jabba/jabba.sh"
-
-# Added by Toolbox App
-export PATH="$PATH:$HOME/Library/Application Support/JetBrains/Toolbox/scripts"
-
-# cargo
+# Cargo
 [ -s "$HOME/.cargo/env" ] && \. "$HOME/.cargo/env"
 
-#fnm
-eval "$(fnm env --use-on-cd)"
-
-#bun
+# Bun
 export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
+[ -d "$BUN_INSTALL/bin" ] && PATH="$BUN_INSTALL/bin:$PATH"
