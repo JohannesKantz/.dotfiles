@@ -21,12 +21,12 @@ Preview and link files:
 
 ```bash
 # macOS
-stow -n -v -t "$HOME" aliases bash functions ghostty git kitty macos neofetch vim zsh
-stow -v -t "$HOME" aliases bash functions ghostty git kitty macos neofetch vim zsh
+stow -n -v -t "$HOME" aliases bash fastfetch functions ghostty git kitty macos neofetch tmux vim zsh
+stow -v -t "$HOME" aliases bash fastfetch functions ghostty git kitty macos neofetch tmux vim zsh
 
 # Linux
-stow -n -v -t "$HOME" aliases bash functions ghostty git kitty linux neofetch vim zsh
-stow -v -t "$HOME" aliases bash functions ghostty git kitty linux neofetch vim zsh
+stow -n -v -t "$HOME" aliases bash fastfetch functions ghostty git kitty linux neofetch tmux vim zsh
+stow -v -t "$HOME" aliases bash fastfetch functions ghostty git kitty linux neofetch tmux vim zsh
 ```
 
 `-n` previews changes. Remove it after checking the output. Existing files must
@@ -100,7 +100,7 @@ stow -D -v -t "$HOME" tmux
 ## Folders
 
 ```text
-aliases/ functions/ bash/ ghostty/ git/ kitty/ neofetch/ vim/ zsh/
+aliases/ functions/ bash/ fastfetch/ ghostty/ git/ kitty/ neofetch/ tmux/ vim/ zsh/
     Shared macOS and Linux Stow packages
 
 macos/ linux/

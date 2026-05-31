@@ -167,3 +167,8 @@ alias neofetch_boxes="neofetch --config ~/.config/neofetch/boxes.conf"
 alias neofetch_onrefetch="neofetch --config ~/.config/neofetch/onrefetch.conf"
 alias neofetch_papirus="neofetch --config ~/.config/neofetch/papirus.conf"
 
+
+# Fastfetch
+alias fastfetch_small="fastfetch --config ~/.config/fastfetch/small.jsonc"
+alias fastfetch_neo="fastfetch --config ~/.config/fastfetch/neo.jsonc"
+
