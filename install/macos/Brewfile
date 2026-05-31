@@ -1,0 +1,11 @@
+tap "nikitabobko/tap"
+
+brew "fnm"
+brew "gh"
+brew "git"
+brew "stow"
+brew "vim"
+
+cask "aerospace"
+cask "ghostty"
+cask "kitty"

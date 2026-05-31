@@ -1,0 +1,63 @@
+###############
+#  Functions  #
+###############
+
+# returns the current git branch
+git_branch() {
+    local branch="$(git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/(\1)/')"
+    [[ -z $branch ]] || printf "$branch "
+}
+
+# create new dir and enter it
+mkd() {
+    mkdir -p "$@" && cd "$@"
+}
+
+# shell load time
+#   zshrc profiling
+#       add "zmodload zsh/zprof" (without quotes) to the top top "~/.zshrc"
+#       and run "zprof" after restarting the shell
+shell_load_time() {
+    time $SHELL -i -c exit
+}
+
+
+# get disto name (example: 'ubuntu', 'debian', 'manjaro', ...)
+get_distro() {
+    awk -F '=' '/^ID=/{print $2}' /etc/*-release
+}
+
+# get name the distro it is based on (example: 'arch', 'debian', ...)
+get_distro_like() {
+    distro_like=$(awk -F '=' '/^ID_LIKE=/{print $2}' /etc/*-release)
+    if [[ ! "$distro_like" ]]; then
+        distro_like=$(get_distro)
+    fi
+    echo "$distro_like"
+}
+
+# get the operating system name (example: 'LINUX', 'WINDOWS', 'OSX', ...)
+function get_os() {
+    case "`uname`" in
+        Linux)
+            echo "LINUX";;
+        Darwin)
+            echo "OSX";;
+        CYGWIN*|MINGW32*|MSYS*|MINGW*|WindowsNT)
+            echo "WINDOWS";;
+        FreeBSD)
+            echo "BSD" ;;
+        SunOS)
+            echo "SOLARIS" ;;
+        *)
+            echo "$OSTYPE" ;;
+    esac
+}
+
+lowercase(){
+    echo "$1" | awk '{ print tolower($0) }'
+}
+
+uppercase(){
+    echo "$1" | awk '{ print toupper($0) }'
+}

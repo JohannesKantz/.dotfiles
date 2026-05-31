@@ -1,0 +1,9 @@
+theme = catppuccin mocha
+#theme = catppuccin-mocha
+#theme = GruvBoxDarkHard
+#window-theme = ghostty
+font-size = 16
+
+#background-opacity = 0.97
+#background-blur-radius = 12
+

@@ -1,0 +1,63 @@
+[user]
+	name = Johannes Kantz
+	email = 67144859+JohannesKantz@users.noreply.github.com
+    username = JohannesKantz
+
+[core]
+	# auto-converting CRLF line endings into LF
+	# windows = true / unix = input
+	autocrlf = input
+	# default text editor
+	editor = "vim"
+	# default gitignore ~/.config/git/ignore
+	# Unix = ~/.gitignore / Windows = "%USERPROFILE%\.gitignore"
+	#excludesfile = ~/.gitignore
+
+[init]
+	defaultBranch = main
+
+[commit]
+	verbose = true
+
+[alias]
+	a = add --all
+	###
+	b = branch
+	###
+	c = commit
+	cm = commit -m
+	ac = !git add --all && git commit -m
+	###
+	cl = clone
+	###
+	co = checkout
+	cob = checkout -b
+	###
+	d = diff
+	###
+	l = log --oneline
+	lg = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+	ll = lg
+	###
+	ls = ls-files
+	###
+	m = merge
+	###
+	ps = push
+	###
+	pl = pull
+	###
+	s = status
+	st = status -sb
+	###
+	undo = reset HEAD~1 --mixed
+
+[filter "lfs"]
+        clean = git-lfs clean -- %f
+        smudge = git-lfs smudge -- %f
+        process = git-lfs filter-process
+        required = true
+
+[pull]
+	rebase = true
+

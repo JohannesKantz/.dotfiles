@@ -1,0 +1,137 @@
+#############
+#  ALIASES  #
+#############
+
+
+##########
+# Colors #
+##########
+
+BLACK="\e[0;30m"
+WHITE="\e[1;37m"
+
+RED="\e[0;31m"
+GREEN="\e[0;32m"
+BLUE="\e[0;34m"
+
+CYAN="\e[0;36m"
+PURPLE="\e[0;35m"
+BROWN="\e[0;33m"
+LIGHTGRAY="\e[0;37m"
+DARKGRAY="\e[1;30m"
+LIGHTBLUE="\e[1;34m"
+LIGHTGREEN="\e[1;32m"
+LIGHTCYAN="\e[1;36m"
+LIGHTRED="\e[1;31m"
+LIGHTPURPLE="\e[1;35m"
+YELLOW="\e[1;33m"
+
+NC="\e[0m"                              # No Color
+
+
+###########
+# Aliases #
+###########
+
+# Colors
+alias grep="grep --color=auto"
+alias egrep="egrep --color=auto"
+alias fgrep="fgrep --color=auto"
+
+alias diff="diff --color=auto"
+
+
+# Short
+alias c="clear"
+alias cls="clear"
+alias h="history"
+alias hist="history"
+
+
+# ls
+alias ls="ls --color=auto"
+alias ll="ls -lahF"
+alias la="ll"
+alias ll-date="ll -tr"                  # sort by date
+alias ll-ext="ll -XB"                   # sort by extension
+alias ll-size="ll -Sr"                  # sort by size
+
+# dir
+alias dir="dir --color=auto"
+alias vdir="vdir --color=auto"
+
+# cd
+alias cd-="cd -"
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ......="cd ../../../../.."
+
+alias ..="cd .."
+alias ..2="cd ../../"
+alias ..3="cd ../../../"
+alias ..4="cd ../../../../"
+alias ..5="cd ../../../../../"
+
+alias cd..="cd .."
+alias cd...="cd ../.."
+alias cd....="cd ../../.."
+alias cd.....="cd ../../../.."
+alias cd......="cd ../../../../.."
+
+
+# dir
+alias documents="cd ~/documents"
+alias downloads="cd ~/downloads"
+alias desktop="cd ~/desktop"
+
+#cp
+alias cp="cp -vi"                       # ask before overwriting, shows what it's doing
+
+# ln
+alias ln="ln -vi"                       # show results, ask before overwriting destination
+
+#mkdir
+alias mkdir="mkdir -pv"
+
+#mv
+alias mv="mv -vi"                       # ask before overwriting, shows what it's doing
+
+
+# exit
+alias quit="exit"
+
+# python
+alias py="python"
+
+# g++
+alias g++11="g++ -std=c++11"
+alias g++14="g++ -std=c++14"
+alias g++17="g++ -std=c++17"
+alias g++20="g++ -std=c++2a"
+
+# Audio formats
+alias ytmp3='yt-dlp -x --audio-format mp3 --audio-quality 0 -o "%(title)s.%(ext)s"'
+alias ytflac='yt-dlp -x --audio-format flac --audio-quality 0 -o "%(title)s.%(ext)s"'
+alias ytaac='yt-dlp -x --audio-format aac --audio-quality 0 -o "%(title)s.%(ext)s"'
+alias ytopus='yt-dlp -x --audio-format opus --audio-quality 0 -o "%(title)s.%(ext)s"'
+alias ytm4a='yt-dlp -x --audio-format m4a --audio-quality 0 -o "%(title)s.%(ext)s"'
+alias ytwav='yt-dlp -x --audio-format wav --audio-quality 0 -o "%(title)s.%(ext)s"'
+alias ytvorbis='yt-dlp -x --audio-format vorbis --audio-quality 0 -o "%(title)s.%(ext)s"'
+
+# Video formats
+alias ytbest='yt-dlp -f "bestvideo+bestaudio/best" --merge-output-format mkv -o "%(title)s.%(ext)s"'
+alias ytmp4='yt-dlp -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best" --merge-output-format mp4 -o "%(title)s.%(ext)s"'
+alias ytwebm='yt-dlp -f "bestvideo[ext=webm]+bestaudio[ext=webm]/best[ext=webm]/best" --merge-output-format webm -o "%(title)s.%(ext)s"'
+alias ytmkv='yt-dlp -f "bestvideo+bestaudio/best" --merge-output-format mkv -o "%(title)s.%(ext)s"'
+alias ytmov='yt-dlp -f "bestvideo+bestaudio/best" --merge-output-format mov -o "%(title)s.%(ext)s"'
+alias ytavi='yt-dlp -f "bestvideo+bestaudio/best" --merge-output-format avi -o "%(title)s.%(ext)s"'
+
+# Video formats at specific resolutions (mp4)
+alias yt4k='yt-dlp -f "bestvideo[height<=2160][ext=mp4]+bestaudio[ext=m4a]/best[height<=2160]" --merge-output-format mp4 -o "%(title)s.%(ext)s"'
+alias yt1080='yt-dlp -f "bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080]" --merge-output-format mp4 -o "%(title)s.%(ext)s"'
+alias yt720='yt-dlp -f "bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720]" --merge-output-format mp4 -o "%(title)s.%(ext)s"'
+alias yt480='yt-dlp -f "bestvideo[height<=480][ext=mp4]+bestaudio[ext=m4a]/best[height<=480]" --merge-output-format mp4 -o "%(title)s.%(ext)s"'
+alias yt360='yt-dlp -f "bestvideo[height<=360][ext=mp4]+bestaudio[ext=m4a]/best[height<=360]" --merge-output-format mp4 -o "%(title)s.%(ext)s"'
+
