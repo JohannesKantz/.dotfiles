@@ -37,7 +37,6 @@ NC="\e[0m"                              # No Color
 alias grep="grep --color=auto"
 alias egrep="egrep --color=auto"
 alias fgrep="fgrep --color=auto"
-
 alias diff="diff --color=auto"
 
 
@@ -46,6 +45,7 @@ alias c="clear"
 alias cls="clear"
 alias h="history"
 alias hist="history"
+alias quit="exit"
 
 
 # ls
@@ -68,7 +68,6 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias ......="cd ../../../../.."
 
-alias ..="cd .."
 alias ..2="cd ../../"
 alias ..3="cd ../../../"
 alias ..4="cd ../../../../"
@@ -86,32 +85,45 @@ alias documents="cd ~/documents"
 alias downloads="cd ~/downloads"
 alias desktop="cd ~/desktop"
 
-#cp
+# files
 alias cp="cp -vi"                       # ask before overwriting, shows what it's doing
-
-# ln
-alias ln="ln -vi"                       # show results, ask before overwriting destination
-
-#mkdir
-alias mkdir="mkdir -pv"
-
-#mv
 alias mv="mv -vi"                       # ask before overwriting, shows what it's doing
+alias ln="ln -vi"                       # show results, ask before overwriting destination
+alias mkdir="mkdir -pv"                 # create parent directories as needed, show results
+alias rcp="rsync -ah --progress"        # copy with progress bar
 
 
-# exit
-alias quit="exit"
+# Archives
+alias untar="tar -xzvf"                 # extract .tar.gz
+alias mktar="tar -czvf"                 # create .tar.gz
+alias mkzip="zip -r"                    # zip a folder
 
-# python
+
+# Process
+alias psg="ps aux | grep -v grep | grep"  # psg python
+alias kill9="kill -9"
+
+
+# Network
+alias myip="curl -s https://ifconfig.me"          # public IP
+alias ports="lsof -i -P -n | grep LISTEN"         # listening ports
+
+
+# Python
 alias py="python"
+alias serve="python3 -m http.server"              # quick HTTP server in current dir
 
-# g++
+
+# C++
 alias g++11="g++ -std=c++11"
 alias g++14="g++ -std=c++14"
 alias g++17="g++ -std=c++17"
-alias g++20="g++ -std=c++2a"
+alias g++20="g++ -std=c++20"
+alias g++23="g++ -std=c++23"
+alias g++26="g++ -std=c++26"
 
-# Audio formats
+
+# yt-dlp — Audio
 alias ytmp3='yt-dlp -x --audio-format mp3 --audio-quality 0 -o "%(title)s.%(ext)s"'
 alias ytflac='yt-dlp -x --audio-format flac --audio-quality 0 -o "%(title)s.%(ext)s"'
 alias ytaac='yt-dlp -x --audio-format aac --audio-quality 0 -o "%(title)s.%(ext)s"'
@@ -120,7 +132,8 @@ alias ytm4a='yt-dlp -x --audio-format m4a --audio-quality 0 -o "%(title)s.%(ext)
 alias ytwav='yt-dlp -x --audio-format wav --audio-quality 0 -o "%(title)s.%(ext)s"'
 alias ytvorbis='yt-dlp -x --audio-format vorbis --audio-quality 0 -o "%(title)s.%(ext)s"'
 
-# Video formats
+
+# yt-dlp — Video
 alias ytbest='yt-dlp -f "bestvideo+bestaudio/best" --merge-output-format mkv -o "%(title)s.%(ext)s"'
 alias ytmp4='yt-dlp -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best" --merge-output-format mp4 -o "%(title)s.%(ext)s"'
 alias ytwebm='yt-dlp -f "bestvideo[ext=webm]+bestaudio[ext=webm]/best[ext=webm]/best" --merge-output-format webm -o "%(title)s.%(ext)s"'
@@ -128,7 +141,8 @@ alias ytmkv='yt-dlp -f "bestvideo+bestaudio/best" --merge-output-format mkv -o "
 alias ytmov='yt-dlp -f "bestvideo+bestaudio/best" --merge-output-format mov -o "%(title)s.%(ext)s"'
 alias ytavi='yt-dlp -f "bestvideo+bestaudio/best" --merge-output-format avi -o "%(title)s.%(ext)s"'
 
-# Video formats at specific resolutions (mp4)
+
+# yt-dlp — Video (specific resolution)
 alias yt4k='yt-dlp -f "bestvideo[height<=2160][ext=mp4]+bestaudio[ext=m4a]/best[height<=2160]" --merge-output-format mp4 -o "%(title)s.%(ext)s"'
 alias yt1080='yt-dlp -f "bestvideo[height<=1080][ext=mp4]+bestaudio[ext=m4a]/best[height<=1080]" --merge-output-format mp4 -o "%(title)s.%(ext)s"'
 alias yt720='yt-dlp -f "bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720]" --merge-output-format mp4 -o "%(title)s.%(ext)s"'
