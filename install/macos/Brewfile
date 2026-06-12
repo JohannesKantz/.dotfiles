@@ -1,5 +1,3 @@
-tap "nikitabobko/tap"
-
 brew "bat"
 brew "bind"
 brew "btop"
@@ -25,7 +23,7 @@ brew "mise"
 brew "neovim"
 brew "nmap"
 brew "node"
-brew "opencode"
+brew "anomalyco/tap/opencode", trusted: true
 brew "openjdk"
 brew "php"
 brew "python"
@@ -44,7 +42,7 @@ brew "zip"
 brew "zoxide"
 
 cask "1password"
-cask "aerospace"
+cask "nikitabobko/tap/aerospace", trusted: true
 cask "claude-code@latest"
 cask "codex"
 cask "discord"
