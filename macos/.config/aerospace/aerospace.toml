@@ -43,6 +43,7 @@ cmd-alt-ctrl-shift-l = 'move right'
 cmd-alt-ctrl-t = 'layout tiles horizontal vertical'
 cmd-alt-ctrl-a = 'layout accordion horizontal vertical'
 cmd-alt-ctrl-f = 'layout floating tiling'
+cmd-alt-ctrl-enter = 'exec-and-forget open -a Ghostty'
 
 cmd-alt-ctrl-minus = 'resize smart -50'
 cmd-alt-ctrl-equal = 'resize smart +50'
