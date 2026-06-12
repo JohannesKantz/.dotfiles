@@ -21,12 +21,12 @@ Preview and link files:
 
 ```bash
 # macOS
-stow -n -v -t "$HOME" aliases bash bat btop curl fastfetch functions ghostty git kitty macos mise neofetch ripgrep tmux vim wget zsh
-stow -v -t "$HOME" aliases bash bat btop curl fastfetch functions ghostty git kitty macos mise neofetch ripgrep tmux vim wget zsh
+stow -n -v -t "$HOME" aliases bash bat btop curl fastfetch functions ghostty git kitty macos mise neofetch nvim ripgrep tmux vim wget zsh
+stow -v -t "$HOME" aliases bash bat btop curl fastfetch functions ghostty git kitty macos mise neofetch nvim ripgrep tmux vim wget zsh
 
 # Linux
-stow -n -v -t "$HOME" aliases bash bat btop curl fastfetch functions ghostty git kitty linux mise neofetch ripgrep tmux vim wget zsh
-stow -v -t "$HOME" aliases bash bat btop curl fastfetch functions ghostty git kitty linux mise neofetch ripgrep tmux vim wget zsh
+stow -n -v -t "$HOME" aliases bash bat btop curl fastfetch functions ghostty git kitty linux mise neofetch nvim ripgrep tmux vim wget zsh
+stow -v -t "$HOME" aliases bash bat btop curl fastfetch functions ghostty git kitty linux mise neofetch nvim ripgrep tmux vim wget zsh
 ```
 
 `-n` previews changes. Remove it after checking the output. Existing files must
@@ -61,6 +61,28 @@ antidote update
 
 Plugins are listed in `~/.zsh_plugins.txt`. Antidote installs itself when Zsh
 starts for the first time.
+
+## Neovim
+
+The Neovim package uses [LazyVim](https://www.lazyvim.org/) and requires Neovim
+0.11.2 or newer. Plugins install automatically the first time Neovim starts.
+
+```text
+:Lazy         Manage and update plugins
+:LazyExtras   Enable language and editor features
+:LazyHealth   Check the installation
+:Mason        Manage language servers and tools
+```
+
+Personal overrides live in `nvim/.config/nvim/lua/config/`. Add or override
+plugins in `nvim/.config/nvim/lua/plugins/custom.lua`. Commit `lazy-lock.json`
+after updating plugins.
+
+Language support is enabled through LazyVim extras in
+`nvim/.config/nvim/lua/config/lazy.lua`. The current extras cover C/C++, Docker,
+Git, Go, JSON, Markdown, Python, Rust, Tailwind CSS, TOML, TypeScript, and YAML,
+plus Prettier, ESLint, testing, and debugging. Use `:LazyExtras` to discover
+additional maintained integrations.
 
 ## Add A Dotfile
 
@@ -100,7 +122,7 @@ stow -D -v -t "$HOME" tmux
 ## Folders
 
 ```text
-aliases/ bash/ bat/ btop/ curl/ fastfetch/ functions/ ghostty/ git/ kitty/ mise/ neofetch/ ripgrep/ tmux/ vim/ wget/ zsh/
+aliases/ bash/ bat/ btop/ curl/ fastfetch/ functions/ ghostty/ git/ kitty/ mise/ neofetch/ nvim/ ripgrep/ tmux/ vim/ wget/ zsh/
     Shared macOS and Linux Stow packages
 
 macos/ linux/

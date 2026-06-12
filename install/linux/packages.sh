@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-packages=(bash bat btop curl fd-find fzf gh git jq ripgrep stow tmux tree vim wget zsh)
+packages=(bash bat btop curl fd-find fzf gh git jq neovim ripgrep stow tmux tree vim wget zsh)
 
 # zoxide and mise are not in standard repos; install via their official scripts if missing:
 #   zoxide:  curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
@@ -19,4 +19,3 @@ else
     printf 'Unsupported package manager. Install manually: %s\n' "${packages[*]}" >&2
     exit 1
 fi
-
