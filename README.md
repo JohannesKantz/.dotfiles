@@ -17,16 +17,23 @@ brew install stow
 sudo apt install stow
 ```
 
+Create the private SSH directory before linking. This prevents Stow from
+linking the entire directory into the repository.
+
+```bash
+install -d -m 700 "$HOME/.ssh"
+```
+
 Preview and link files:
 
 ```bash
 # macOS
-stow -n -v -t "$HOME" aliases bash bat btop curl fastfetch functions ghostty git kitty macos mise neofetch nvim ripgrep tmux vim wget zsh
-stow -v -t "$HOME" aliases bash bat btop curl fastfetch functions ghostty git kitty macos mise neofetch nvim ripgrep tmux vim wget zsh
+stow -n -v -t "$HOME" aliases bash bat btop curl fastfetch functions ghostty git kitty macos mise neofetch nvim ripgrep ssh tmux vim wget zsh
+stow -v -t "$HOME" aliases bash bat btop curl fastfetch functions ghostty git kitty macos mise neofetch nvim ripgrep ssh tmux vim wget zsh
 
 # Linux
-stow -n -v -t "$HOME" aliases bash bat btop curl fastfetch functions ghostty git kitty linux mise neofetch nvim ripgrep tmux vim wget zsh
-stow -v -t "$HOME" aliases bash bat btop curl fastfetch functions ghostty git kitty linux mise neofetch nvim ripgrep tmux vim wget zsh
+stow -n -v -t "$HOME" aliases bash bat btop curl fastfetch functions ghostty git kitty linux mise neofetch nvim ripgrep ssh tmux vim wget zsh
+stow -v -t "$HOME" aliases bash bat btop curl fastfetch functions ghostty git kitty linux mise neofetch nvim ripgrep ssh tmux vim wget zsh
 ```
 
 `-n` previews changes. Remove it after checking the output. Existing files must
@@ -84,6 +91,25 @@ Git, Go, JSON, Markdown, Python, Rust, Tailwind CSS, TOML, TypeScript, and YAML,
 plus Prettier, ESLint, testing, and debugging. Use `:LazyExtras` to discover
 additional maintained integrations.
 
+## SSH
+
+The tracked SSH client configuration keeps OpenSSH's authentication and
+security defaults, hashes hostnames in `known_hosts`, and detects dead
+connections. Put private hosts and machine-specific settings in
+`~/.ssh/config.local`; that file is intentionally ignored.
+
+```sshconfig
+Host example
+    HostName example.com
+    User username
+```
+
+Keep the private file readable only by your user:
+
+```bash
+chmod 600 "$HOME/.ssh/config.local"
+```
+
 ## Add A Dotfile
 
 The first directory is the Stow package. Everything below it is the path inside
@@ -122,7 +148,7 @@ stow -D -v -t "$HOME" tmux
 ## Folders
 
 ```text
-aliases/ bash/ bat/ btop/ curl/ fastfetch/ functions/ ghostty/ git/ kitty/ mise/ neofetch/ nvim/ ripgrep/ tmux/ vim/ wget/ zsh/
+aliases/ bash/ bat/ btop/ curl/ fastfetch/ functions/ ghostty/ git/ kitty/ mise/ neofetch/ nvim/ ripgrep/ ssh/ tmux/ vim/ wget/ zsh/
     Shared macOS and Linux Stow packages
 
 macos/ linux/
