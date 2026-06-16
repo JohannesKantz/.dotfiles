@@ -78,6 +78,10 @@ if (( $+commands[mise] )); then
     eval "$(mise activate zsh)"
 fi
 
+if (( $+commands[zoxide] )); then
+    eval "$(zoxide init zsh)"
+fi
+
 
 ################
 #  COMPLETION  #
@@ -129,6 +133,25 @@ fi
 
 autoload -Uz compinit
 compinit -d "$ZSH_COMPDUMP"
+
+if (( $+commands[fzf] )); then
+    if fzf --help 2>&1 | command grep -q -- '--zsh'; then
+        source <(fzf --zsh)
+    else
+        for script in \
+            /opt/homebrew/opt/fzf/shell/completion.zsh \
+            /opt/homebrew/opt/fzf/shell/key-bindings.zsh \
+            /usr/local/opt/fzf/shell/completion.zsh \
+            /usr/local/opt/fzf/shell/key-bindings.zsh \
+            /usr/share/doc/fzf/examples/completion.zsh \
+            /usr/share/doc/fzf/examples/key-bindings.zsh \
+            /usr/share/fzf/completion.zsh \
+            /usr/share/fzf/key-bindings.zsh; do
+            [[ -r "$script" ]] && source "$script"
+        done
+        unset script
+    fi
+fi
 
 # Group matches and describe
 zstyle ':completion:*' menu select

@@ -7,14 +7,14 @@ git clone <repository-url> ~/.dotfiles
 cd ~/.dotfiles
 ```
 
-Install Stow:
+Install packages:
 
 ```bash
-# macOS
-brew install stow
+# macOS. Install Homebrew first if it is missing: https://brew.sh
+./install/macos/packages.sh
 
-# Debian / Ubuntu
-sudo apt install stow
+# Linux
+./install/linux/packages.sh
 ```
 
 Create the private SSH directory before linking. This prevents Stow from

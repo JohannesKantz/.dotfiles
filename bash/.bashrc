@@ -42,6 +42,29 @@ if command -v mise >/dev/null 2>&1; then
     eval "$(mise activate bash)"
 fi
 
+if command -v zoxide >/dev/null 2>&1; then
+    eval "$(zoxide init bash)"
+fi
+
+if command -v fzf >/dev/null 2>&1; then
+    if fzf --help 2>&1 | command grep -q -- '--bash'; then
+        eval "$(fzf --bash)"
+    else
+        for script in \
+            /opt/homebrew/opt/fzf/shell/completion.bash \
+            /opt/homebrew/opt/fzf/shell/key-bindings.bash \
+            /usr/local/opt/fzf/shell/completion.bash \
+            /usr/local/opt/fzf/shell/key-bindings.bash \
+            /usr/share/doc/fzf/examples/completion.bash \
+            /usr/share/doc/fzf/examples/key-bindings.bash \
+            /usr/share/fzf/completion.bash \
+            /usr/share/fzf/key-bindings.bash; do
+            [[ -r "$script" ]] && . "$script"
+        done
+        unset script
+    fi
+fi
+
 
 ###################
 #  USER SETTINGS  #
