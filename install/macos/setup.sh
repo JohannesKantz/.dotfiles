@@ -66,7 +66,7 @@ brew cleanup
 install -d -m 700 "$HOME/.ssh"
 mkdir -p "$HOME/dev"
 
-stow --dir "$repo_dir" --target "$HOME" --verbose "${stow_packages[@]}"
+stow --dir "$repo_dir" --target "$HOME" --restow --verbose "${stow_packages[@]}"
 
 "$script_dir/system-settings.sh"
 
