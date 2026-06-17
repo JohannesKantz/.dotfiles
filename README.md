@@ -7,13 +7,21 @@ git clone <repository-url> ~/.dotfiles
 cd ~/.dotfiles
 ```
 
-Install packages:
+macOS setup:
 
 ```bash
-# macOS. Install Homebrew first if it is missing: https://brew.sh
-./install/macos/packages.sh
+./install/macos/setup.sh
+```
 
-# Linux
+This installs Command Line Tools, Homebrew packages, Stow links, `~/dev`, and
+macOS system settings.
+
+If the Xcode Command Line Tools installer opens, finish it and run the script
+again.
+
+Linux setup:
+
+```bash
 ./install/linux/packages.sh
 ```
 
@@ -24,14 +32,9 @@ linking the entire directory into the repository.
 install -d -m 700 "$HOME/.ssh"
 ```
 
-Preview and link files:
+Preview and link files on Linux:
 
 ```bash
-# macOS
-stow -n -v -t "$HOME" aliases bash bat btop curl fastfetch functions ghostty git kitty macos mise neofetch nvim ripgrep ssh tmux vim wget zsh
-stow -v -t "$HOME" aliases bash bat btop curl fastfetch functions ghostty git kitty macos mise neofetch nvim ripgrep ssh tmux vim wget zsh
-
-# Linux
 stow -n -v -t "$HOME" aliases bash bat btop curl fastfetch functions ghostty git kitty linux mise neofetch nvim ripgrep ssh tmux vim wget zsh
 stow -v -t "$HOME" aliases bash bat btop curl fastfetch functions ghostty git kitty linux mise neofetch nvim ripgrep ssh tmux vim wget zsh
 ```
