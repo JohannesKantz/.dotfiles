@@ -11,6 +11,7 @@ repo_dir="$(cd -- "$script_dir/../.." && pwd)"
 
 stow_packages=(
     aliases
+    agents
     bash
     bat
     btop

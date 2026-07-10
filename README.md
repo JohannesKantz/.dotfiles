@@ -22,25 +22,15 @@ again.
 Linux setup:
 
 ```bash
-./install/linux/packages.sh
+./install/linux/setup.sh
 ```
 
-Create the private SSH directory before linking. This prevents Stow from
-linking the entire directory into the repository.
+This installs Linux equivalents for the macOS Brewfile CLI/work packages,
+creates required directories, fixes Debian `bat`/`fd` command names, and links
+the terminal-focused Stow packages.
 
-```bash
-install -d -m 700 "$HOME/.ssh"
-```
-
-Preview and link files on Linux:
-
-```bash
-stow -n -v -t "$HOME" aliases bash bat btop curl fastfetch functions ghostty git kitty linux mise neofetch nvim ripgrep ssh tmux vim wget zsh
-stow -v -t "$HOME" aliases bash bat btop curl fastfetch functions ghostty git kitty linux mise neofetch nvim ripgrep ssh tmux vim wget zsh
-```
-
-`-n` previews changes. Remove it after checking the output. Existing files must
-be moved or deleted before Stow can create links.
+Desktop apps, desktop settings, and distro-specific extras should be added later
+as a separate layer instead of complicating the base Linux install.
 
 ## Sync Changes
 
