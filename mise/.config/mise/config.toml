@@ -11,7 +11,6 @@ not_found_auto_install = true
 
 [tools]
 # Global default tool versions — override per-project with a local .mise.toml
-# Uncomment and set the versions you want available everywhere.
 node = "lts"
 # python = "latest"
 # rust = "stable"

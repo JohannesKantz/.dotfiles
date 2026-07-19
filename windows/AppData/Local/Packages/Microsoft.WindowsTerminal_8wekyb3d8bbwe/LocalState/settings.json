@@ -1,0 +1,164 @@
+{
+    "$schema": "https://aka.ms/terminal-profiles-schema",
+    "actions": [
+        {
+            "command": {
+                "action": "copy",
+                "singleLine": false
+            },
+            "keys": "ctrl+c"
+        },
+        {
+            "command": "paste",
+            "keys": "ctrl+v"
+        },
+        {
+            "command": "find",
+            "keys": "ctrl+shift+f"
+        },
+        {
+            "command": {
+                "action": "splitPane",
+                "split": "auto",
+                "splitMode": "duplicate"
+            },
+            "keys": "alt+shift+d"
+        },
+        {
+            "command": {
+                "action": "newTab",
+                "profile": "{00000000-0000-0000-ba54-000000000002}"
+            },
+            "keys": "ctrl+shift+1"
+        },
+        {
+            "command": {
+                "action": "newTab",
+                "profile": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}"
+            },
+            "keys": "ctrl+shift+2"
+        },
+        {
+            "command": {
+                "action": "newTab",
+                "profile": "{00000000-0000-0000-ba54-000000000003}"
+            },
+            "keys": "ctrl+shift+3"
+        },
+        {
+            "command": {
+                "action": "newTab",
+                "profile": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}"
+            },
+            "keys": "ctrl+shift+4"
+        },
+        {
+            "command": {
+                "action": "newTab",
+                "profile": "{2c4de342-38b7-51cf-b940-2309a097f518}"
+            },
+            "keys": "ctrl+shift+5"
+        }
+    ],
+    "copyFormatting": "none",
+    "copyOnSelect": false,
+    "defaultProfile": "{00000000-0000-0000-ba54-000000000002}",
+    "disabledProfileSources": [
+        "Windows.Terminal.Azure",
+        "Windows.Terminal.PowershellCore",
+        "Windows.Terminal.SSH",
+        "Windows.Terminal.VisualStudio",
+        "Windows.Terminal.Wsl"
+    ],
+    "language": "en-US",
+    "newTabMenu": [
+        {
+            "type": "remainingProfiles"
+        }
+    ],
+    "profiles": {
+        "defaults": {
+            "bellStyle": "none",
+            "colorScheme": "One Half Dark",
+            "cursorShape": "bar",
+            "opacity": 75,
+            "useAcrylic": true
+        },
+        "list": [
+            {
+                "commandline": "%ProgramFiles%\\Git\\bin\\bash.exe -li",
+                "font": {
+                    "face": "Consolas NF"
+                },
+                "guid": "{00000000-0000-0000-ba54-000000000002}",
+                "icon": "%ProgramFiles%\\Git\\mingw64\\share\\git\\git-for-windows.ico",
+                "name": "Git Bash",
+                "startingDirectory": "%USERPROFILE%",
+                "suppressApplicationTitle": true,
+                "tabColor": "#1E2127"
+            },
+            {
+                "commandline": "pwsh.exe -NoLogo",
+                "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+                "name": "PowerShell",
+                "tabColor": "#012456"
+            },
+            {
+                "commandline": "pwsh.exe -NoLogo",
+                "elevate": true,
+                "guid": "{00000000-0000-0000-ba54-000000000003}",
+                "icon": "ms-appx:///ProfileIcons/{61c54bbd-c2c6-5271-96e7-009a87ff44bf}.png",
+                "name": "PowerShell (Admin)",
+                "tabColor": "#012456"
+            },
+            {
+                "commandline": "cmd.exe",
+                "font": {
+                    "face": "Cascadia Mono"
+                },
+                "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
+                "name": "Command Prompt",
+                "tabColor": "#000000"
+            },
+            {
+                "commandline": "wsl.exe -d Ubuntu --cd ~",
+                "cursorShape": "filledBox",
+                "font": {
+                    "face": "Consolas NF",
+                    "weight": "normal"
+                },
+                "guid": "{2c4de342-38b7-51cf-b940-2309a097f518}",
+                "icon": "https://ubuntu.com/favicon.ico",
+                "name": "Ubuntu",
+                "tabColor": "#E95420"
+            }
+        ]
+    },
+    "schemes": [
+        {
+            "background": "#282C34",
+            "black": "#282C34",
+            "blue": "#61AFEF",
+            "brightBlack": "#5A6374",
+            "brightBlue": "#61AFEF",
+            "brightCyan": "#56B6C2",
+            "brightGreen": "#98C379",
+            "brightPurple": "#C678DD",
+            "brightRed": "#E06C75",
+            "brightWhite": "#FFFFFF",
+            "brightYellow": "#D19A66",
+            "cursorColor": "#FFFFFF",
+            "cyan": "#56B6C2",
+            "foreground": "#ABB2BF",
+            "green": "#98C379",
+            "name": "One Half Dark",
+            "purple": "#C678DD",
+            "red": "#E06C75",
+            "selectionBackground": "#FFFFFF",
+            "white": "#ABB2BF",
+            "yellow": "#D19A66"
+        }
+    ],
+    "theme": "dark",
+    "useAcrylicInTabRow": true
+}

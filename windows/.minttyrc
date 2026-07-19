@@ -1,0 +1,13 @@
+ThemeFile=flat-ui
+CursorType=line
+CursorBlinks=yes
+FontHeight=12
+Font=Fira Mono for Powerline
+FontWeight=400
+Locale=de_DE.UTF-8
+Charwidth=unicode
+Emojis=apple
+Columns=100
+Rows=30
+Transparency=off
+BellType=0

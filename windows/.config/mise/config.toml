@@ -1,0 +1,24 @@
+# Windows Mise configuration
+# This file is linked to ~/.config/mise/config.toml by install/windows/manage.ps1.
+
+[settings]
+auto_install = true
+not_found_auto_install = true
+
+[tools]
+# Runtimes
+node = "lts"
+
+# Terminal coding agents. Mise installs native Windows binaries, independently
+# from the Node version selected by a project.
+codex = "latest"
+claude = "latest"
+opencode = "latest"
+
+# Everyday terminal tools
+ripgrep = "latest" # command: rg
+fd = "latest"
+jq = "latest"
+fzf = "latest"
+zoxide = "latest" # command: zoxide; shell integration provides `z`
+yt-dlp = "latest"

@@ -32,6 +32,17 @@ the terminal-focused Stow packages.
 Desktop apps, desktop settings, and distro-specific extras should be added later
 as a separate layer instead of complicating the base Linux install.
 
+Windows setup (from PowerShell):
+
+```powershell
+.\install\windows\setup.ps1
+```
+
+It installs the WinGet lists, Scoop, the Windows Mise tools, Windows dotfiles,
+Git-Bash Zsh and app settings. It runs as your user and asks for elevation only
+for the link and Zsh phase. WSL and system-wide Windows settings remain manual
+while that script is work in progress.
+
 ## Sync Changes
 
 ```bash

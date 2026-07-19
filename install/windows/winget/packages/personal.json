@@ -1,0 +1,56 @@
+{
+    "$schema": "https://aka.ms/winget-packages.schema.2.0.json",
+    "CreationDate": "2021-10-13T01:57:46.271-00:00",
+    "Sources": [
+        {
+            "Packages": [
+                {
+                    "PackageIdentifier": "Spotify.Spotify"
+                },
+                {
+                    "PackageIdentifier": "Discord.Discord"
+                },
+                {
+                    "PackageIdentifier": "TeamSpeakSystems.TeamSpeakClient"
+                },
+                {
+                    "PackageIdentifier": "AgileBits.1Password"
+                },
+                {
+                    "PackageIdentifier": "Nvidia.Broadcast"
+                },
+                {
+                    "PackageIdentifier": "Microsoft.WebMediaExtensions_8wekyb3d8bbwe"
+                },
+                {
+                    "PackageIdentifier": "Microsoft.VP9VideoExtensions_8wekyb3d8bbwe"
+                },
+                {
+                    "PackageIdentifier": "Microsoft.AV1VideoExtension_8wekyb3d8bbwe"
+                },
+                {
+                    "PackageIdentifier": "Microsoft.HEIFImageExtension_8wekyb3d8bbwe"
+                },
+                {
+                    "PackageIdentifier": "Microsoft.WebpImageExtension_8wekyb3d8bbwe"
+                },
+                {
+                    "PackageIdentifier": "Microsoft.HEVCVideoExtensions_8wekyb3d8bbwe"
+                },
+                {
+                    "PackageIdentifier": "Microsoft.MPEG2VideoExtension_8wekyb3d8bbwe"
+                },
+                {
+                    "PackageIdentifier": "Microsoft.RawImageExtension_8wekyb3d8bbwe"
+                }
+            ],
+            "SourceDetails": {
+                "Argument": "https://cdn.winget.microsoft.com/cache",
+                "Identifier": "Microsoft.Winget.Source_8wekyb3d8bbwe",
+                "Name": "winget",
+                "Type": "Microsoft.PreIndexed.Package"
+            }
+        }
+    ],
+    "WinGetVersion": "1.1.12653"
+}
