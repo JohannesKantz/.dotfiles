@@ -1,6 +1,6 @@
 {
     "$schema": "https://aka.ms/winget-packages.schema.2.0.json",
-    "CreationDate": "2026-07-19T00:00:00-00:00",
+    "CreationDate": "2026-07-22T00:00:00-00:00",
     "Sources": [
         {
             "Packages": [
@@ -11,13 +11,31 @@
                     "PackageIdentifier": "Mozilla.Firefox"
                 },
                 {
-                    "PackageIdentifier": "BraveSoftware.BraveBrowser"
-                },
-                {
                     "PackageIdentifier": "VideoLAN.VLC"
                 },
                 {
-                    "PackageIdentifier": "RARLab.WinRAR"
+                    "PackageIdentifier": "Microsoft.WebMediaExtensions_8wekyb3d8bbwe"
+                },
+                {
+                    "PackageIdentifier": "Microsoft.VP9VideoExtensions_8wekyb3d8bbwe"
+                },
+                {
+                    "PackageIdentifier": "Microsoft.AV1VideoExtension_8wekyb3d8bbwe"
+                },
+                {
+                    "PackageIdentifier": "Microsoft.HEIFImageExtension_8wekyb3d8bbwe"
+                },
+                {
+                    "PackageIdentifier": "Microsoft.WebpImageExtension_8wekyb3d8bbwe"
+                },
+                {
+                    "PackageIdentifier": "Microsoft.HEVCVideoExtensions_8wekyb3d8bbwe"
+                },
+                {
+                    "PackageIdentifier": "Microsoft.MPEG2VideoExtension_8wekyb3d8bbwe"
+                },
+                {
+                    "PackageIdentifier": "Microsoft.RawImageExtension_8wekyb3d8bbwe"
                 }
             ],
             "SourceDetails": {

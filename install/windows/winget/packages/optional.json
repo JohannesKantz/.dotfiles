@@ -1,11 +1,26 @@
 {
     "$schema": "https://aka.ms/winget-packages.schema.2.0.json",
-    "CreationDate": "2021-10-13T01:57:46.271-00:00",
+    "CreationDate": "2026-07-22T00:00:00-00:00",
     "Sources": [
         {
             "Packages": [
                 {
-                    "PackageIdentifier": "Figma.Figma"
+                    "PackageIdentifier": "TablePlus.TablePlus"
+                },
+                {
+                    "PackageIdentifier": "Amazon.AWSCLI"
+                },
+                {
+                    "PackageIdentifier": "Microsoft.AzureCLI"
+                },
+                {
+                    "PackageIdentifier": "GIMP.GIMP"
+                },
+                {
+                    "PackageIdentifier": "Inkscape.Inkscape"
+                },
+                {
+                    "PackageIdentifier": "Blackmagic.DaVinciResolve"
                 },
                 {
                     "PackageIdentifier": "HandBrake.HandBrake"

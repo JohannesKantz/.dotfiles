@@ -1,10 +1,10 @@
 $ErrorActionPreference = 'Stop'
 
-## Install the four preserved package groups from this directory.
+## Install the baseline and personal package groups from this directory.
 ## Run from any working directory; package paths are based on this script.
 
 $packageRoot = Join-Path $PSScriptRoot 'packages'
-$wingetImportFiles = @('basic.json', 'personal.json', 'dev.json', 'creative.json') |
+$wingetImportFiles = @('basic.json', 'personal.json') |
     ForEach-Object { Join-Path $packageRoot $_ }
 
 if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {

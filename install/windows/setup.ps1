@@ -81,7 +81,7 @@ if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
 
 Write-Host 'Setting up Windows...'
 
-# All curated WinGet groups: basic, personal, development, and creative tools.
+# Install the baseline and personal tools.
 & (Join-Path $PSScriptRoot 'winget/install.ps1')
 
 # WinGet may have installed Git during this session, without updating this

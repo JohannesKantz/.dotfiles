@@ -38,10 +38,10 @@ Windows setup (from PowerShell):
 .\install\windows\setup.ps1
 ```
 
-It installs the WinGet lists, Scoop, the Windows Mise tools, Windows dotfiles,
-Git-Bash Zsh and app settings. It runs as your user and asks for elevation only
-for the link and Zsh phase. WSL and system-wide Windows settings remain manual
-while that script is work in progress.
+It installs the basic and personal WinGet lists, Scoop, the Windows Mise tools,
+Windows dotfiles, Git-Bash Zsh and app settings. It runs as your user and asks
+for elevation only for the link and Zsh phase. WSL and system-wide Windows
+settings remain manual while that script is work in progress.
 
 ## Sync Changes
 

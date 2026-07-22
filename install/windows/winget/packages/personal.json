@@ -1,9 +1,15 @@
 {
     "$schema": "https://aka.ms/winget-packages.schema.2.0.json",
-    "CreationDate": "2021-10-13T01:57:46.271-00:00",
+    "CreationDate": "2026-07-22T00:00:00-00:00",
     "Sources": [
         {
             "Packages": [
+                {
+                    "PackageIdentifier": "BraveSoftware.BraveBrowser"
+                },
+                {
+                    "PackageIdentifier": "RARLab.WinRAR"
+                },
                 {
                     "PackageIdentifier": "Spotify.Spotify"
                 },
@@ -20,28 +26,64 @@
                     "PackageIdentifier": "Nvidia.Broadcast"
                 },
                 {
-                    "PackageIdentifier": "Microsoft.WebMediaExtensions_8wekyb3d8bbwe"
+                    "PackageIdentifier": "Figma.Figma"
                 },
                 {
-                    "PackageIdentifier": "Microsoft.VP9VideoExtensions_8wekyb3d8bbwe"
+                    "PackageIdentifier": "Git.Git"
                 },
                 {
-                    "PackageIdentifier": "Microsoft.AV1VideoExtension_8wekyb3d8bbwe"
+                    "PackageIdentifier": "GitHub.cli"
                 },
                 {
-                    "PackageIdentifier": "Microsoft.HEIFImageExtension_8wekyb3d8bbwe"
+                    "PackageIdentifier": "GnuWin32.Wget"
                 },
                 {
-                    "PackageIdentifier": "Microsoft.WebpImageExtension_8wekyb3d8bbwe"
+                    "PackageIdentifier": "Gyan.FFmpeg"
                 },
                 {
-                    "PackageIdentifier": "Microsoft.HEVCVideoExtensions_8wekyb3d8bbwe"
+                    "PackageIdentifier": "GnuWin32.Grep"
                 },
                 {
-                    "PackageIdentifier": "Microsoft.MPEG2VideoExtension_8wekyb3d8bbwe"
+                    "PackageIdentifier": "GnuWin32.Tree"
                 },
                 {
-                    "PackageIdentifier": "Microsoft.RawImageExtension_8wekyb3d8bbwe"
+                    "PackageIdentifier": "GnuWin32.Zip"
+                },
+                {
+                    "PackageIdentifier": "GnuWin32.Tar"
+                },
+                {
+                    "PackageIdentifier": "GnuWin32.UnZip"
+                },
+                {
+                    "PackageIdentifier": "GnuWin32.Make"
+                },
+                {
+                    "PackageIdentifier": "Kitware.CMake"
+                },
+                {
+                    "PackageIdentifier": "Insecure.Nmap"
+                },
+                {
+                    "PackageIdentifier": "Neovim.Neovim"
+                },
+                {
+                    "PackageIdentifier": "Docker.DockerDesktop"
+                },
+                {
+                    "PackageIdentifier": "Microsoft.WindowsTerminal"
+                },
+                {
+                    "PackageIdentifier": "Microsoft.PowerShell"
+                },
+                {
+                    "PackageIdentifier": "Microsoft.PowerToys"
+                },
+                {
+                    "PackageIdentifier": "Microsoft.VisualStudioCode"
+                },
+                {
+                    "PackageIdentifier": "GoLang.Go"
                 }
             ],
             "SourceDetails": {

@@ -7,9 +7,10 @@ Stow from WSL. On a new machine run:
 .\install\windows\setup.ps1
 ```
 
-It runs as your normal user, installs all WinGet groups, Scoop, Mise and the
-Windows Mise tools, then asks for elevation only when links or Zsh actually
-need changing. It applies app settings only when their contents differ.
+It runs as your normal user, installs the basic and personal WinGet groups,
+Scoop, Mise and the Windows Mise tools, then asks for elevation only when links
+or Zsh actually need changing. It applies app settings only when their contents
+differ.
 System-wide Windows settings and WSL setup are currently not part of this
 script.
 
