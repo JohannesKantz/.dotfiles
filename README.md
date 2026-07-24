@@ -26,8 +26,9 @@ Linux setup:
 ```
 
 This installs Linux equivalents for the macOS Brewfile CLI/work packages,
-creates required directories, fixes Debian `bat`/`fd` command names, and links
-the terminal-focused Stow packages.
+creates required directories, fixes Debian `bat`/`fd` command names, links
+the terminal-focused Stow packages, and installs the runtimes declared in the
+global Mise configuration (currently Node LTS).
 
 Desktop apps, desktop settings, and distro-specific extras should be added later
 as a separate layer instead of complicating the base Linux install.

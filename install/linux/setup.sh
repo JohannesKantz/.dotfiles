@@ -75,6 +75,8 @@ if command -v apt-get >/dev/null 2>&1; then
         ca-certificates
         curl
         git
+        lsof
+        mise
         neovim
         ripgrep
         stow
@@ -110,11 +112,8 @@ if command -v apt-get >/dev/null 2>&1; then
         lua5.4
         luajit
         make
-        mise
         neofetch
         nmap
-        nodejs
-        npm
         php-cli
         pkg-config
         protobuf-compiler
@@ -145,6 +144,8 @@ elif command -v dnf >/dev/null 2>&1; then
         ca-certificates
         curl
         git
+        lsof
+        mise
         neovim
         ripgrep
         stow
@@ -179,11 +180,8 @@ elif command -v dnf >/dev/null 2>&1; then
         lua
         luajit
         make
-        mise
         neofetch
         nmap
-        nodejs
-        npm
         perl-Image-ExifTool
         php-cli
         pkgconf-pkg-config
@@ -213,6 +211,8 @@ elif command -v pacman >/dev/null 2>&1; then
         ca-certificates
         curl
         git
+        lsof
+        mise
         neovim
         ripgrep
         stow
@@ -245,11 +245,8 @@ elif command -v pacman >/dev/null 2>&1; then
         llvm
         lua
         luajit
-        mise
         neofetch
         nmap
-        nodejs
-        npm
         perl-image-exiftool
         php
         pkgconf
@@ -291,5 +288,8 @@ if ! command -v fd >/dev/null 2>&1 && command -v fdfind >/dev/null 2>&1; then
 fi
 
 stow --dir "$repo_dir" --target "$HOME" --restow --verbose "${packages[@]}"
+
+# Install the runtimes declared in the now-linked global Mise configuration.
+mise install
 
 printf '\nLinux setup complete. Restart your shell.\n'

@@ -1,6 +1,12 @@
 # Legacy migration input. Keep it until the new setup has been tested.
 /tmp/
 
+# Local environment files may contain tokens or credentials. Commit a
+# redacted .env.example instead when a configuration template is needed.
+.env
+.env.*
+!.env.example
+
 # Local editor and operating-system files.
 .DS_Store
 *.swp
