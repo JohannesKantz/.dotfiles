@@ -1,3 +1,6 @@
+[CmdletBinding()]
+param([switch]$Check)
+
 $ErrorActionPreference = 'Stop'
 if (Test-Path Variable:\PSNativeCommandUseErrorActionPreference) {
     $PSNativeCommandUseErrorActionPreference = $false
@@ -15,6 +18,7 @@ $wingetOptions = @(
     '--disable-interactivity'
 )
 $failedPackages = @()
+$changesRequired = $false
 
 function Test-WingetPackageInstalled {
     param([Parameter(Mandatory)][string]$Id)
@@ -32,6 +36,13 @@ function Install-WingetPackage {
 
     if (-not $Force -and (Test-WingetPackageInstalled -Id $Id)) {
         Write-Host "$Id already installed."
+        return
+    }
+
+    if ($Check) {
+        $action = if ($Force) { 'reconfigure' } else { 'install' }
+        Write-Host "Would $action $Id."
+        $script:changesRequired = $true
         return
     }
 
@@ -80,29 +91,19 @@ function Test-VSCodeInstallerTasks {
 Install-WingetPackage 'Google.Chrome'
 Install-WingetPackage 'Mozilla.Firefox'
 Install-WingetPackage 'VideoLAN.VLC'
-Install-WingetPackage 'Microsoft.WebMediaExtensions_8wekyb3d8bbwe'
-Install-WingetPackage 'Microsoft.VP9VideoExtensions_8wekyb3d8bbwe'
-Install-WingetPackage 'Microsoft.AV1VideoExtension_8wekyb3d8bbwe'
-Install-WingetPackage 'Microsoft.HEIFImageExtension_8wekyb3d8bbwe'
-Install-WingetPackage 'Microsoft.WebpImageExtension_8wekyb3d8bbwe'
-Install-WingetPackage 'Microsoft.HEVCVideoExtensions_8wekyb3d8bbwe'
-Install-WingetPackage 'Microsoft.MPEG2VideoExtension_8wekyb3d8bbwe'
-Install-WingetPackage 'Microsoft.RawImageExtension_8wekyb3d8bbwe'
 
 # Personal apps
-# Install-WingetPackage 'BraveSoftware.BraveBrowser'
+# Install-WingetPackage 'Brave.Brave'
 # Install-WingetPackage 'RARLab.WinRAR'
 Install-WingetPackage 'Spotify.Spotify'
 Install-WingetPackage 'Discord.Discord'
 Install-WingetPackage 'TeamSpeakSystems.TeamSpeakClient'
 Install-WingetPackage 'AgileBits.1Password'
-# Install-WingetPackage 'Nvidia.Broadcast'
 # Install-WingetPackage 'Figma.Figma'
 
 # Developer tools
 Install-WingetPackage 'Git.Git'
 Install-WingetPackage 'GitHub.cli'
-Install-WingetPackage 'GnuWin32.Wget'
 Install-WingetPackage 'Gyan.FFmpeg'
 Install-WingetPackage 'GnuWin32.Grep'
 Install-WingetPackage 'GnuWin32.Tree'
@@ -133,11 +134,14 @@ Install-WingetPackage 'Microsoft.VisualStudioCode' `
 # Install-WingetPackage 'Microsoft.AzureCLI'
 # Install-WingetPackage 'GIMP.GIMP'
 # Install-WingetPackage 'Inkscape.Inkscape'
-# Install-WingetPackage 'Blackmagic.DaVinciResolve'
 # Install-WingetPackage 'HandBrake.HandBrake'
 # Install-WingetPackage 'OBSProject.OBSStudio'
 # Install-WingetPackage 'BlenderFoundation.Blender'
 
 if ($failedPackages.Count -gt 0) {
     throw "WinGet could not install: $($failedPackages -join ', '). Review the output, then run setup.ps1 again."
+}
+
+if ($Check) {
+    return $changesRequired
 }

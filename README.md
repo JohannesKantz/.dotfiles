@@ -66,7 +66,8 @@ Use these only when you also want the packages and platform setup.
 ```
 
 Run the Windows setup from a normal, non-administrator PowerShell window. It
-requests elevation only when needed:
+requests elevation only when needed and groups the elevated work into one UAC
+prompt:
 
 ```powershell
 .\install\windows\setup.ps1

@@ -1,6 +1,7 @@
 [CmdletBinding()]
 param(
     [switch]$ElevatedPhase,
+    [switch]$Packages,
     [switch]$Link,
     [switch]$Zsh
 )
@@ -41,18 +42,20 @@ function Install-Scoop {
 
 function Invoke-ElevatedPhase {
     param(
+        [switch]$Packages,
         [switch]$Link,
         [switch]$Zsh
     )
 
     $hostExecutable = (Get-Process -Id $PID).Path
     $phaseArguments = @('-ElevatedPhase')
+    if ($Packages) { $phaseArguments += '-Packages' }
     if ($Link) { $phaseArguments += '-Link' }
     if ($Zsh) { $phaseArguments += '-Zsh' }
     $arguments = "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`" $($phaseArguments -join ' ')"
     $process = Start-Process -FilePath $hostExecutable -Verb RunAs -ArgumentList $arguments -Wait -PassThru
     if ($process.ExitCode -ne 0) {
-        throw "The elevated link/Zsh phase failed (exit code $($process.ExitCode))."
+        throw "The elevated package/link/Zsh phase failed (exit code $($process.ExitCode))."
     }
 }
 
@@ -61,7 +64,10 @@ if ($ElevatedPhase) {
         throw 'The elevated phase requires Administrator approval.'
     }
 
-    # File symlinks and the Zsh overlay in Program Files need elevation.
+    # Batch installers and file operations into one UAC-approved process.
+    if ($Packages) {
+        & (Join-Path $PSScriptRoot 'winget/install.ps1')
+    }
     if ($Link) {
         & (Join-Path $PSScriptRoot 'manage.ps1') Link -Replace
     }
@@ -81,8 +87,31 @@ if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
 
 Write-Host 'Setting up Windows...'
 
-# Install the baseline and personal tools.
-& (Join-Path $PSScriptRoot 'winget/install.ps1')
+$wingetInstallScript = Join-Path $PSScriptRoot 'winget/install.ps1'
+$packagesRequired = @(& $wingetInstallScript -Check) -contains $true
+
+$linkStatus = @(& (Join-Path $PSScriptRoot 'manage.ps1') Status)
+$linkRequired = @($linkStatus | Where-Object { $_.Mode -eq 'Link' -and $_.State -ne 'link current' }).Count -gt 0
+
+$gitRoot = Join-Path $env:ProgramFiles 'Git'
+$gitBashPath = Join-Path $gitRoot 'bin\bash.exe'
+$zshRequired = if (Test-Path -LiteralPath $gitBashPath -PathType Leaf) {
+    @(& (Join-Path $PSScriptRoot 'zsh/install-git-bash-zsh.ps1') -Check) -contains $true
+}
+else {
+    # Git is part of the WinGet package list. Install it before adding Zsh.
+    $true
+}
+
+if ($packagesRequired -or $linkRequired -or $zshRequired) {
+    Invoke-ElevatedPhase `
+        -Packages:$packagesRequired `
+        -Link:$linkRequired `
+        -Zsh:$zshRequired
+}
+else {
+    Write-Host 'WinGet packages, links, and Git Bash Zsh already current; no elevation needed.'
+}
 
 # WinGet may have installed Git during this session, without updating this
 # PowerShell process's PATH.
@@ -110,22 +139,6 @@ if ($LASTEXITCODE -ne 0) { throw "Mise update failed (exit code $LASTEXITCODE)."
 Add-PathEntry (Join-Path $HOME 'scoop\shims')
 if (-not (Get-Command mise -ErrorAction SilentlyContinue)) {
     throw 'Mise was installed but is not available in this PowerShell session.'
-}
-
-# Link shell/editor configuration before Mise reads its Windows global config.
-# A status check avoids a UAC prompt when every link is already right.
-$linkStatus = @(& (Join-Path $PSScriptRoot 'manage.ps1') Status)
-$linkRequired = @($linkStatus | Where-Object { $_.Mode -eq 'Link' -and $_.State -ne 'link current' }).Count -gt 0
-
-# Compare the actual Git for Windows files with the current verified MSYS2 Zsh
-# package. This is read-only; an elevated process starts only if files differ.
-$zshRequired = @(& (Join-Path $PSScriptRoot 'zsh/install-git-bash-zsh.ps1') -Check) -contains $true
-
-if ($linkRequired -or $zshRequired) {
-    Invoke-ElevatedPhase -Link:$linkRequired -Zsh:$zshRequired
-}
-else {
-    Write-Host 'Links and Git Bash Zsh already current; no elevation needed.'
 }
 
 # Install the global versions declared in windows/.config/mise/config.toml.
