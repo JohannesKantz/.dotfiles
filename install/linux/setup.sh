@@ -133,7 +133,7 @@ if command -v apt-get >/dev/null 2>&1; then
         btop
         ca-certificates
         curl
-        dnsutils
+        bind9-dnsutils
         fd-find
         fzf
         gh
