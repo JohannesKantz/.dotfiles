@@ -6,12 +6,12 @@
 #  OPTIONS  #
 #############
 
-setopt PROMPT_SUBST         # enable substitution in the prompt
-setopt AUTOCD               # optional cd
-setopt AUTO_PUSHD           # cd push the old directory onto the directory stack
-setopt PUSHD_MINUS          # exchanges the meanings of '+' and '-'
-setopt PUSHD_IGNORE_DUPS    # don't push multiple copies of the same directory onto the directory stack
-setopt PUSHD_SILENT         # don't print the directory stack after pushd or popd
+setopt PROMPT_SUBST
+setopt AUTOCD
+setopt AUTO_PUSHD
+setopt PUSHD_MINUS
+setopt PUSHD_IGNORE_DUPS
+setopt PUSHD_SILENT
 
 
 #############
@@ -22,13 +22,13 @@ HISTFILE="$HOME/.zsh_history"
 HISTSIZE=50000
 SAVEHIST=50000
 
-setopt APPEND_HISTORY           # append history to the history file, rather than replace it
-setopt EXTENDED_HISTORY         # save timestamps and durations
-setopt HIST_EXPIRE_DUPS_FIRST   # delete duplicates first when the history is full
-setopt HIST_IGNORE_DUPS         # don't save a command if it is the same as the previous command
-setopt HIST_IGNORE_SPACE        # don't save commands that start with a space
-setopt HIST_VERIFY              # show expanded history commands before running them
-setopt SHARE_HISTORY            # share history between open shells
+setopt APPEND_HISTORY
+setopt EXTENDED_HISTORY
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_VERIFY
+setopt SHARE_HISTORY
 
 
 #########################
@@ -51,7 +51,6 @@ ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 #  PLUGINS  #
 #############
 
-# Bind arrow keys for history substring search.
 function hss-bindkey() {
     zmodload zsh/terminfo
     for keymap in main emacs viins; do
@@ -74,10 +73,8 @@ fi
 #  SHELL INTEGRATION  #
 #######################
 
-if (( $+commands[mise] )); then
-    eval "$(mise activate zsh)"
-fi
-
+# Mise-managed commands come from %LOCALAPPDATA%\mise\shims through the
+# Windows user PATH. Native `mise activate zsh` is incompatible with MSYS paths.
 if (( $+commands[zoxide] )); then
     eval "$(zoxide init zsh)"
 fi
@@ -139,10 +136,6 @@ if (( $+commands[fzf] )); then
         source <(fzf --zsh)
     else
         for script in \
-            /opt/homebrew/opt/fzf/shell/completion.zsh \
-            /opt/homebrew/opt/fzf/shell/key-bindings.zsh \
-            /usr/local/opt/fzf/shell/completion.zsh \
-            /usr/local/opt/fzf/shell/key-bindings.zsh \
             /usr/share/doc/fzf/examples/completion.zsh \
             /usr/share/doc/fzf/examples/key-bindings.zsh \
             /usr/share/fzf/completion.zsh \
@@ -153,7 +146,6 @@ if (( $+commands[fzf] )); then
     fi
 fi
 
-# Group matches and describe
 zstyle ':completion:*' menu select
 zstyle ':completion:*:matches' group 'yes'
 zstyle ':completion:*:options' description 'yes'
@@ -168,17 +160,14 @@ zstyle ':completion:*' list-separator '→'
 zstyle ':completion:*' group-name ''
 zstyle ':completion:*' verbose yes
 
-# Fuzzy match mistyped completions
 zstyle ':completion:*' completer _expand _complete _ignored _approximate
 zstyle ':completion:*:approximate:*' max-errors 1 numeric
 
-# History
 zstyle ':completion:*:history-words' stop yes
 zstyle ':completion:*:history-words' remove-all-dups yes
 zstyle ':completion:*:history-words' list false
 zstyle ':completion:*:history-words' menu yes
 
-# Ignore multiple entries
 zstyle ':completion:*:(rm|kill|diff):*' ignore-line yes
 zstyle ':completion:*:rm:*' file-patterns '*:all-files'
 
@@ -187,10 +176,7 @@ zstyle ':completion:*:rm:*' file-patterns '*:all-files'
 #  USER SETTINGS  #
 ###################
 
-# load aliases
 [[ -f "$HOME/.aliases" ]] && source "$HOME/.aliases"
-
-# load functions
 [[ -f "$HOME/.functions" ]] && source "$HOME/.functions"
 
 

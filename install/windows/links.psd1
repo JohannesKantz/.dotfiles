@@ -6,9 +6,9 @@
         # Shared packages already present in this repository.
         @{ Name = 'Git';        Mode = 'Link'; Source = 'git/.gitconfig';        TargetRoot = 'Home';         Target = '.gitconfig' }
         @{ Name = 'Bash';       Mode = 'Link'; Source = 'bash/.bashrc';          TargetRoot = 'Home';         Target = '.bashrc' }
-        @{ Name = 'Zsh';        Mode = 'Link'; Source = 'zsh/.zshrc';            TargetRoot = 'Home';         Target = '.zshrc' }
-        @{ Name = 'Zprofile';   Mode = 'Link'; Source = 'zsh/.zprofile';         TargetRoot = 'Home';         Target = '.zprofile' }
-        @{ Name = 'ZshPlugins'; Mode = 'Link'; Source = 'zsh/.zsh_plugins.txt';  TargetRoot = 'Home';         Target = '.zsh_plugins.txt' }
+        @{ Name = 'Zsh';        Mode = 'Link'; Source = 'windows/.zshrc';         TargetRoot = 'Home';         Target = '.zshrc' }
+        @{ Name = 'Zprofile';   Mode = 'Link'; Source = 'windows/.zprofile';      TargetRoot = 'Home';         Target = '.zprofile' }
+        @{ Name = 'ZshPlugins'; Mode = 'Link'; Source = 'windows/.zsh_plugins.txt'; TargetRoot = 'Home';       Target = '.zsh_plugins.txt' }
         @{ Name = 'Aliases';    Mode = 'Link'; Source = 'aliases/.aliases';     TargetRoot = 'Home';         Target = '.aliases' }
         @{ Name = 'Functions';  Mode = 'Link'; Source = 'functions/.functions'; TargetRoot = 'Home';         Target = '.functions' }
         @{ Name = 'Vim';        Mode = 'Link'; Source = 'vim/.vimrc';           TargetRoot = 'Home';         Target = '.vimrc' }

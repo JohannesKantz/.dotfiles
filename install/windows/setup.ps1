@@ -23,6 +23,20 @@ function Add-PathEntry {
     }
 }
 
+function Add-UserPathEntry {
+    param([Parameter(Mandatory)][string]$PathEntry)
+
+    $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
+    $userPathEntries = @($userPath -split ';' | Where-Object { $_ })
+    if ($userPathEntries -notcontains $PathEntry) {
+        $newUserPath = (@($PathEntry) + $userPathEntries) -join ';'
+        [Environment]::SetEnvironmentVariable('Path', $newUserPath, 'User')
+        Write-Host "Added $PathEntry to the user PATH."
+    }
+
+    Add-PathEntry $PathEntry
+}
+
 function Install-Scoop {
     if (Get-Command scoop -ErrorAction SilentlyContinue) {
         Write-Host 'Scoop already installed.'
@@ -54,13 +68,31 @@ function Test-ScoopAppInstalled {
     return Test-Path -LiteralPath (Join-Path (Get-ScoopRoot) "apps\$Name\current") -PathType Container
 }
 
+function Test-FontRegistered {
+    param([Parameter(Mandatory)][string]$RegistryName)
+
+    $registryPaths = @(
+        'HKCU:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts'
+        'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts'
+    )
+
+    foreach ($registryPath in $registryPaths) {
+        $fonts = Get-ItemProperty -Path $registryPath -ErrorAction SilentlyContinue
+        if ($fonts -and $fonts.PSObject.Properties.Name -contains $RegistryName) {
+            return $true
+        }
+    }
+
+    return $false
+}
+
 function Install-NerdFonts {
     $bucketName = 'nerd-fonts'
     $fontPackages = @(
-        'CascadiaMono-NF-Mono'
-        'FiraCode-NF-Mono'
-        'JetBrainsMono-NF-Mono'
-        'GeistMono-NF-Mono'
+        @{ Name = 'CascadiaMono-NF-Mono';   RegistryName = 'CaskaydiaMonoNerdFontMono-Regular (TrueType)' }
+        @{ Name = 'FiraCode-NF-Mono';       RegistryName = 'FiraCodeNerdFontMono-Regular (TrueType)' }
+        @{ Name = 'JetBrainsMono-NF-Mono';  RegistryName = 'JetBrainsMonoNerdFontMono-Regular (TrueType)' }
+        @{ Name = 'GeistMono-NF-Mono';      RegistryName = 'GeistMonoNerdFontMono-Regular (TrueType)' }
     )
     $bucketPath = Join-Path (Get-ScoopRoot) "buckets\$bucketName"
 
@@ -69,14 +101,21 @@ function Install-NerdFonts {
         if ($LASTEXITCODE -ne 0) { throw "Could not add the Scoop $bucketName bucket (exit code $LASTEXITCODE)." }
     }
 
-    foreach ($fontPackage in $fontPackages) {
-        if (Test-ScoopAppInstalled -Name $fontPackage) {
-            Write-Host "$fontPackage already installed."
+    foreach ($font in $fontPackages) {
+        if ((Test-ScoopAppInstalled -Name $font.Name) -and
+            (Test-FontRegistered -RegistryName $font.RegistryName)) {
+            Write-Host "$($font.Name) already installed."
             continue
         }
 
-        & scoop install "$bucketName/$fontPackage"
-        if ($LASTEXITCODE -ne 0) { throw "$fontPackage installation failed (exit code $LASTEXITCODE)." }
+        if (Test-ScoopAppInstalled -Name $font.Name) {
+            Write-Host "Repairing $($font.Name)..."
+            & scoop uninstall $font.Name
+            if ($LASTEXITCODE -ne 0) { throw "$($font.Name) repair failed during uninstall (exit code $LASTEXITCODE)." }
+        }
+
+        & scoop install "$bucketName/$($font.Name)"
+        if ($LASTEXITCODE -ne 0) { throw "$($font.Name) installation failed (exit code $LASTEXITCODE)." }
     }
 }
 
@@ -162,6 +201,7 @@ Install-Scoop
 if ($LASTEXITCODE -ne 0) { throw "Scoop update failed (exit code $LASTEXITCODE)." }
 
 Install-NerdFonts
+Write-Host 'Restart Windows Terminal once if a newly installed font is not visible yet.'
 
 if (-not (Test-ScoopAppInstalled -Name 'mise')) {
     if (Get-Command mise -ErrorAction SilentlyContinue) {
@@ -185,6 +225,11 @@ if (-not (Get-Command mise -ErrorAction SilentlyContinue)) {
 # Install the global versions declared in windows/.config/mise/config.toml.
 & mise install
 if ($LASTEXITCODE -ne 0) { throw "Mise tool installation failed (exit code $LASTEXITCODE)." }
+
+& mise reshim
+if ($LASTEXITCODE -ne 0) { throw "Mise could not create its command shims (exit code $LASTEXITCODE)." }
+
+Add-UserPathEntry (Join-Path $env:LOCALAPPDATA 'mise\shims')
 
 # App settings replace differing values only; existing settings are backed up.
 & (Join-Path $PSScriptRoot 'manage.ps1') Apply -Replace

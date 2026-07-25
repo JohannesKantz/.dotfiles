@@ -40,6 +40,6 @@ Git for Windows. Replaced Zsh files are backed up below
 `$HOME\.dotfiles-backups\git-bash-zsh`. Start Git Bash afterwards:
 `.bash_profile` starts Zsh, otherwise it falls back to Bash.
 
-The current `.zshrc` uses Antidote and already declares syntax highlighting and
-autosuggestions. Do not install the old, separate Oh-My-Zsh configuration as
-well.
+Git Bash uses `windows/.zshrc` and the native Windows Mise shims. WSL, Linux and
+macOS keep using `zsh/.zshrc` with normal `mise activate zsh`. PowerShell keeps
+using `mise activate pwsh`.

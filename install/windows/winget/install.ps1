@@ -105,7 +105,7 @@ Install-WingetPackage 'VideoLAN.VLC'
 # Install-WingetPackage 'RARLab.WinRAR'
 Install-WingetPackage 'Spotify.Spotify'
 Install-WingetPackage 'Discord.Discord'
-# Install-WingetPackage 'TeamSpeakSystems.TeamSpeakClient'
+# Install-WingetPackage 'TeamSpeakSystems.TeamSpeakClient' -InstallerArguments '/S /ALLUSERS'
 Install-WingetPackage 'AgileBits.1Password'
 # Install-WingetPackage 'Figma.Figma'
 
