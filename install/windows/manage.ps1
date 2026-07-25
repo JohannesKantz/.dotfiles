@@ -84,7 +84,10 @@ function Test-SameFileContent {
     $targetItem = Get-TargetItem $Target
     if (-not $targetItem -or $targetItem.PSIsContainer -or $targetItem.LinkType) { return $false }
 
-    $ignoredProperties = @($Entry.IgnoreProperties)
+    $ignoredProperties = @(
+        $Entry.IgnoreProperties |
+            Where-Object { $_ -is [string] -and -not [string]::IsNullOrWhiteSpace($_) }
+    )
     if ($ignoredProperties.Count -gt 0) {
         try {
             $sourceObject = Get-Content -LiteralPath $Source -Raw | ConvertFrom-Json
