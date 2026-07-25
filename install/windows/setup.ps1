@@ -54,9 +54,14 @@ function Test-ScoopAppInstalled {
     return Test-Path -LiteralPath (Join-Path (Get-ScoopRoot) "apps\$Name\current") -PathType Container
 }
 
-function Install-NerdFont {
+function Install-NerdFonts {
     $bucketName = 'nerd-fonts'
-    $fontPackage = 'CascadiaMono-NF-Mono'
+    $fontPackages = @(
+        'CascadiaMono-NF-Mono'
+        'FiraCode-NF-Mono'
+        'JetBrainsMono-NF-Mono'
+        'GeistMono-NF-Mono'
+    )
     $bucketPath = Join-Path (Get-ScoopRoot) "buckets\$bucketName"
 
     if (-not (Test-Path -LiteralPath $bucketPath -PathType Container)) {
@@ -64,13 +69,15 @@ function Install-NerdFont {
         if ($LASTEXITCODE -ne 0) { throw "Could not add the Scoop $bucketName bucket (exit code $LASTEXITCODE)." }
     }
 
-    if (Test-ScoopAppInstalled -Name $fontPackage) {
-        Write-Host 'CaskaydiaMono Nerd Font Mono already installed.'
-        return
-    }
+    foreach ($fontPackage in $fontPackages) {
+        if (Test-ScoopAppInstalled -Name $fontPackage) {
+            Write-Host "$fontPackage already installed."
+            continue
+        }
 
-    & scoop install "$bucketName/$fontPackage"
-    if ($LASTEXITCODE -ne 0) { throw "Nerd Font installation failed (exit code $LASTEXITCODE)." }
+        & scoop install "$bucketName/$fontPackage"
+        if ($LASTEXITCODE -ne 0) { throw "$fontPackage installation failed (exit code $LASTEXITCODE)." }
+    }
 }
 
 function Invoke-ElevatedPhase {
@@ -154,7 +161,7 @@ Install-Scoop
 & scoop update
 if ($LASTEXITCODE -ne 0) { throw "Scoop update failed (exit code $LASTEXITCODE)." }
 
-Install-NerdFont
+Install-NerdFonts
 
 if (-not (Test-ScoopAppInstalled -Name 'mise')) {
     if (Get-Command mise -ErrorAction SilentlyContinue) {
