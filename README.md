@@ -63,6 +63,9 @@ Use these only when you also want the packages and platform setup.
 
 # Linux: system packages, links, and Mise tools
 ./install/linux/setup.sh
+
+# Include optional development and CLI packages
+./install/linux/setup.sh --extras
 ```
 
 Run the Windows setup from a normal, non-administrator PowerShell window. It

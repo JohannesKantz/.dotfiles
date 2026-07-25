@@ -1,13 +1,38 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+repo_dir="$(cd -- "$script_dir/../.." && pwd)"
+
+usage() {
+    printf 'Usage: %s [--extras]\n' "${0##*/}"
+    printf '\nInstall base Linux packages and dotfiles.\n'
+    printf '  --extras  Also install optional development and CLI packages.\n'
+}
+
+install_extras=false
+while (($#)); do
+    case "$1" in
+        --extras)
+            install_extras=true
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        *)
+            printf 'Unknown option: %s\n\n' "$1" >&2
+            usage >&2
+            exit 2
+            ;;
+    esac
+    shift
+done
+
 if [[ "$(uname -s)" != "Linux" ]]; then
     printf 'This setup script only targets Linux.\n' >&2
     exit 1
 fi
-
-script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-repo_dir="$(cd -- "$script_dir/../.." && pwd)"
 
 packages=(
     aliases
@@ -87,204 +112,180 @@ if command -v apt-get >/dev/null 2>&1; then
     package_manager=apt
     base_packages=(
         bash
-        ca-certificates
-        curl
-        git
-        lsof
-        neovim
-        ripgrep
-        stow
-        tmux
-        vim
-        wget
-        zsh
-    )
-    extra_packages=(
         bash-completion
         bat
         btop
-        build-essential
-        bun
-        cloc
-        cmake
-        cmatrix
-        default-jdk
-        deno
+        ca-certificates
+        curl
         dnsutils
         fd-find
         fastfetch
-        ffmpeg
         fzf
-        gcc
         gh
-        golang-go
+        git
         htop
         iperf3
         jq
         libimage-exiftool-perl
-        llvm
-        lua5.4
-        luajit
-        make
+        lsof
         neofetch
+        neovim
         nmap
-        php-cli
-        pkg-config
-        protobuf-compiler
-        python3
-        python3-pip
-        python3-venv
-        rclone
-        rustup
+        ripgrep
         smartmontools
         sqlite-utils
         sqlite3
+        stow
         tldr
+        tmux
         tree
         unzip
-        uv
+        vim
+        wget
         xz-utils
         yt-dlp
         zip
         zoxide
+        zsh
+    )
+    extra_packages=(
+        build-essential
+        cloc
+        cmake
+        cmatrix
+        ffmpeg
+        llvm
+        lua5.4
+        luajit
+        php-cli
+        pkg-config
+        protobuf-compiler
+        rclone
     )
     "${as_root[@]}" apt-get update
     install_packages "${base_packages[@]}"
-    install_extra_packages "${extra_packages[@]}"
 elif command -v dnf >/dev/null 2>&1; then
     package_manager=dnf
     base_packages=(
         bash
-        ca-certificates
-        curl
-        git
-        lsof
-        neovim
-        ripgrep
-        stow
-        tmux
-        vim-enhanced
-        wget
-        zsh
-    )
-    extra_packages=(
         bash-completion
         bat
         bind-utils
         btop
-        bun
-        cloc
-        cmake
-        cmatrix
-        deno
+        ca-certificates
+        curl
         fd-find
         fastfetch
-        ffmpeg-free
         fzf
-        gcc
-        gcc-c++
         gh
-        golang
+        git
         htop
         iperf3
         jq
-        java-latest-openjdk-devel
+        lsof
+        neofetch
+        neovim
+        nmap
+        perl-Image-ExifTool
+        ripgrep
+        smartmontools
+        sqlite
+        stow
+        tldr
+        tmux
+        tree
+        unzip
+        vim-enhanced
+        wget
+        xz
+        yt-dlp
+        zip
+        zoxide
+        zsh
+    )
+    extra_packages=(
+        cloc
+        cmake
+        cmatrix
+        ffmpeg-free
+        gcc
+        gcc-c++
         llvm
         lua
         luajit
         make
-        neofetch
-        nmap
-        perl-Image-ExifTool
         php-cli
         pkgconf-pkg-config
         protobuf-compiler
-        python3
-        python3-pip
         python3-sqlite-utils
         rclone
-        rustup
-        smartmontools
-        sqlite
-        tldr
-        tree
-        unzip
-        uv
-        xz
-        yt-dlp
-        zip
-        zoxide
     )
     install_packages "${base_packages[@]}"
-    install_extra_packages "${extra_packages[@]}"
 elif command -v pacman >/dev/null 2>&1; then
     package_manager=pacman
     base_packages=(
         bash
-        ca-certificates
-        curl
-        git
-        lsof
-        neovim
-        ripgrep
-        stow
-        tmux
-        vim
-        wget
-        zsh
-    )
-    extra_packages=(
-        base-devel
         bat
         bind
         btop
-        bun
-        cloc
-        cmake
-        cmatrix
-        deno
+        ca-certificates
+        curl
         fd
         fastfetch
-        ffmpeg
         fzf
-        gcc
+        git
         github-cli
-        go
         htop
         iperf3
-        jdk-openjdk
         jq
-        llvm
-        lua
-        luajit
+        lsof
         neofetch
+        neovim
         nmap
         perl-image-exiftool
-        php
-        pkgconf
-        protobuf
-        python
-        python-pip
-        rclone
-        rustup
+        ripgrep
         smartmontools
         sqlite
         sqlite-utils
+        stow
         tealdeer
+        tmux
         tree
         unzip
-        uv
+        vim
+        wget
         xz
         yt-dlp
         zip
         zoxide
+        zsh
+    )
+    extra_packages=(
+        base-devel
+        cloc
+        cmake
+        cmatrix
+        ffmpeg
+        gcc
+        llvm
+        lua
+        luajit
+        php
+        pkgconf
+        protobuf
+        rclone
     )
     "${as_root[@]}" pacman -Syu --noconfirm
     install_packages "${base_packages[@]}"
-    install_extra_packages "${extra_packages[@]}"
 else
     printf 'Unsupported package manager. Install packages manually.\n' >&2
     exit 1
+fi
+
+if [[ "$install_extras" == true ]]; then
+    install_extra_packages "${extra_packages[@]}"
+else
+    printf 'Skipping optional packages (rerun with --extras to install them).\n'
 fi
 
 install -d -m 700 "$HOME/.ssh"
