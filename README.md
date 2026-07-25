@@ -65,9 +65,18 @@ Use these only when you also want the packages and platform setup.
 ./install/linux/setup.sh
 ```
 
+Run the Windows setup from a normal, non-administrator PowerShell window. It
+requests elevation only when needed:
+
 ```powershell
-# Windows: WinGet, Scoop, Mise, links, Git Bash Zsh, and app settings
 .\install\windows\setup.ps1
+```
+
+If Windows blocks PowerShell scripts, start this run with a process-only
+override:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\install\windows\setup.ps1
 ```
 
 ## Update
