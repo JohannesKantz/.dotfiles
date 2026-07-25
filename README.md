@@ -1,164 +1,102 @@
 # dotfiles
 
-## New Machine
+Personal shell, editor, terminal, and operating-system configuration.
+
+## Clone
 
 ```bash
-git clone <repository-url> ~/.dotfiles
+git clone https://github.com/JohannesKantz/.dotfiles.git ~/.dotfiles
 cd ~/.dotfiles
 ```
 
-macOS setup:
+## Dotfiles Only
+
+Use this on an existing machine when you do not want to install packages or
+change system settings.
+
+### macOS / Linux
+
+[GNU Stow](https://www.gnu.org/software/stow/) must already be installed.
 
 ```bash
-./install/macos/setup.sh
+# Preview first
+./install/link.sh --dry-run
+
+# Create or refresh the links
+./install/link.sh
 ```
 
-This installs Command Line Tools, Homebrew packages, Stow links, `~/dev`, and
-macOS system settings.
+Existing regular files are not overwritten. Stow reports them as conflicts so
+you can compare or back them up first.
 
-If the Xcode Command Line Tools installer opens, finish it and run the script
-again.
+### Windows
 
-Linux setup:
+Check what would change:
+
+```powershell
+.\install\windows\manage.ps1 Status
+```
+
+Then open PowerShell as Administrator and link the dotfiles:
+
+```powershell
+.\install\windows\manage.ps1 Link -Replace
+```
+
+Existing files are backed up below `$HOME\.dotfiles-backups`.
+
+App settings are optional and copied rather than linked:
+
+```powershell
+.\install\windows\manage.ps1 Apply -Replace
+```
+
+This covers Windows Terminal, PowerToys, and WinGet settings.
+
+## Full Setup
+
+Use these only when you also want the package lists and platform setup.
 
 ```bash
+# macOS: Homebrew packages, links, and system settings
+./install/macos/setup.sh
+
+# Linux: system packages, links, and Mise tools
 ./install/linux/setup.sh
 ```
 
-This installs Linux equivalents for the macOS Brewfile CLI/work packages,
-creates required directories, fixes Debian `bat`/`fd` command names, links
-the terminal-focused Stow packages, and installs the runtimes declared in the
-global Mise configuration (currently Node LTS).
-
-Desktop apps, desktop settings, and distro-specific extras should be added later
-as a separate layer instead of complicating the base Linux install.
-
-Windows setup (from PowerShell):
-
 ```powershell
+# Windows: WinGet, Scoop, Mise, links, Git Bash Zsh, and app settings
 .\install\windows\setup.ps1
 ```
 
-It installs the basic and personal WinGet lists, Scoop, the Windows Mise tools,
-Windows dotfiles, Git-Bash Zsh and app settings. It runs as your user and asks
-for elevation only for the link and Zsh phase. WSL and system-wide Windows
-settings remain manual while that script is work in progress.
-
-## Sync Changes
+## Update
 
 ```bash
 cd ~/.dotfiles
+git status --short
 git pull --rebase
+```
 
-# Run the relevant Stow command again after adding, moving, or deleting files.
+Linked files update immediately. Run `./install/link.sh` again after adding,
+moving, or deleting paths. On Windows, copied app settings require `Apply`
+again.
+
+Changes made through a linked file, such as `~/.zshrc`, are changes inside this
+repository:
+
+```bash
 git status
 git add -A
 git commit -m "update dotfiles"
+git pull --rebase
 git push
 ```
 
-Edit linked files normally:
+## Notes
 
-```bash
-vim ~/.zshrc
-```
-
-## Zsh Plugins
-
-```bash
-antidote install <user/repository>
-antidote list
-antidote update
-```
-
-Plugins are listed in `~/.zsh_plugins.txt`. Antidote installs itself when Zsh
-starts for the first time.
-
-## Neovim
-
-The Neovim package uses [LazyVim](https://www.lazyvim.org/) and requires Neovim
-0.11.2 or newer. Plugins install automatically the first time Neovim starts.
-
-```text
-:Lazy         Manage and update plugins
-:LazyExtras   Enable language and editor features
-:LazyHealth   Check the installation
-:Mason        Manage language servers and tools
-```
-
-Personal overrides live in `nvim/.config/nvim/lua/config/`. Add or override
-plugins in `nvim/.config/nvim/lua/plugins/custom.lua`. Commit `lazy-lock.json`
-after updating plugins.
-
-Language support is enabled through LazyVim extras in
-`nvim/.config/nvim/lua/config/lazy.lua`. The current extras cover C/C++, Docker,
-Git, Go, JSON, Markdown, Python, Rust, Tailwind CSS, TOML, TypeScript, and YAML,
-plus Prettier, ESLint, testing, and debugging. Use `:LazyExtras` to discover
-additional maintained integrations.
-
-## SSH
-
-The tracked SSH client configuration keeps OpenSSH's authentication and
-security defaults, hashes hostnames in `known_hosts`, and detects dead
-connections. Put private hosts and machine-specific settings in
-`~/.ssh/config.local`; that file is intentionally ignored.
-
-```sshconfig
-Host example
-    HostName example.com
-    User username
-```
-
-Keep the private file readable only by your user:
-
-```bash
-chmod 600 "$HOME/.ssh/config.local"
-```
-
-## Add A Dotfile
-
-The first directory is the Stow package. Everything below it is the path inside
-`$HOME`.
-
-```text
-~/.dotfiles/zsh/.zshrc
-              -> ~/.zshrc
-
-~/.dotfiles/ghostty/.config/ghostty/config
-                 -> ~/.config/ghostty/config
-```
-
-Example: add `~/.tmux.conf`.
-
-```bash
-mkdir -p ~/.dotfiles/tmux
-mv ~/.tmux.conf ~/.dotfiles/tmux/.tmux.conf
-
-cd ~/.dotfiles
-stow -n -v -t "$HOME" tmux
-stow -v -t "$HOME" tmux
-
-git add tmux
-git commit -m "add tmux config"
-git push
-```
-
-## Remove A Package
-
-```bash
-cd ~/.dotfiles
-stow -D -v -t "$HOME" tmux
-```
-
-## Folders
-
-```text
-aliases/ bash/ bat/ btop/ curl/ fastfetch/ functions/ ghostty/ git/ kitty/ mise/ neofetch/ nvim/ ripgrep/ ssh/ tmux/ vim/ wget/ zsh/
-    Shared macOS and Linux Stow packages
-
-macos/ linux/
-    Platform-specific Stow packages
-
-install/
-    Package lists and setup scripts. Do not pass this folder to Stow.
-```
+- Zsh plugins are declared in `~/.zsh_plugins.txt` and installed by Antidote.
+- Neovim uses LazyVim and requires Neovim 0.11.2 or newer.
+- Put private SSH hosts in `~/.ssh/config.local`; it is intentionally ignored.
+- Each top-level package mirrors its path below `$HOME`, for example
+  `zsh/.zshrc` becomes `~/.zshrc`.
