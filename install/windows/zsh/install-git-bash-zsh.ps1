@@ -16,20 +16,23 @@ function Test-Administrator {
     return $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 }
 
-function Get-TarCommand {
+function Get-TarCommands {
     param([string]$GitRoot)
 
-    $systemTar = (Get-Command tar.exe -ErrorAction SilentlyContinue | Select-Object -First 1).Path
-    $candidates = @(
-        (Join-Path $GitRoot 'usr\bin\tar.exe'),
-        $systemTar
-    ) | Where-Object { $_ -and (Test-Path -LiteralPath $_ -PathType Leaf) }
+    $pathTar = (Get-Command tar.exe -ErrorAction SilentlyContinue | Select-Object -First 1).Path
+    $candidates = @(@(
+        (Join-Path $env:SystemRoot 'System32\tar.exe')
+        (Join-Path $GitRoot 'usr\bin\tar.exe')
+        $pathTar
+    ) | Where-Object {
+        $_ -and (Test-Path -LiteralPath $_ -PathType Leaf)
+    } | Select-Object -Unique)
 
-    if (-not $candidates) {
+    if ($candidates.Count -eq 0) {
         throw 'tar.exe was not found. Reinstall Git for Windows, then run this script again.'
     }
 
-    return $candidates[0]
+    return $candidates
 }
 
 function Get-DatabaseField {
@@ -50,37 +53,40 @@ function Get-DatabaseField {
 function Get-LatestZshPackage {
     param(
         [string]$DatabasePath,
-        [string]$Tar
+        [string[]]$TarCandidates
     )
 
     # msys.db is the package index consumed by Pacman itself. It contains the
     # current archive filename and SHA-256, without relying on web-page HTML.
-    $entries = @(& $Tar -tf $DatabasePath | Where-Object { $_ -like 'zsh-*/desc' })
-    if ($LASTEXITCODE -ne 0 -or $entries.Count -eq 0) {
-        throw 'Could not read the MSYS2 package index. Nothing was installed.'
-    }
-
-    foreach ($entry in $entries) {
-        $metadata = (& $Tar -xOf $DatabasePath $entry) -join "`n"
-        if ($LASTEXITCODE -ne 0) {
-            throw 'Could not read Zsh metadata from the MSYS2 package index. Nothing was installed.'
+    foreach ($tar in $TarCandidates) {
+        $entries = @(& $tar -tf $DatabasePath 2>$null | Where-Object { $_ -like 'zsh-*/desc' })
+        if ($LASTEXITCODE -ne 0 -or $entries.Count -eq 0) {
+            continue
         }
 
-        if ((Get-DatabaseField -Metadata $metadata -Field 'NAME') -eq 'zsh') {
-            $filename = Get-DatabaseField -Metadata $metadata -Field 'FILENAME'
-            $sha256 = Get-DatabaseField -Metadata $metadata -Field 'SHA256SUM'
-            if (-not $filename -or $filename -notmatch '^zsh-.+\.pkg\.tar\.zst$' -or $sha256 -notmatch '^[a-fA-F0-9]{64}$') {
-                throw 'The MSYS2 package index returned incomplete Zsh metadata. Nothing was installed.'
+        foreach ($entry in $entries) {
+            $metadata = (& $tar -xOf $DatabasePath $entry) -join "`n"
+            if ($LASTEXITCODE -ne 0) {
+                throw 'Could not read Zsh metadata from the MSYS2 package index. Nothing was installed.'
             }
 
-            return [PSCustomObject]@{
-                Url = "https://mirror.msys2.org/msys/x86_64/$filename"
-                Sha256 = $sha256
+            if ((Get-DatabaseField -Metadata $metadata -Field 'NAME') -eq 'zsh') {
+                $filename = Get-DatabaseField -Metadata $metadata -Field 'FILENAME'
+                $sha256 = Get-DatabaseField -Metadata $metadata -Field 'SHA256SUM'
+                if (-not $filename -or $filename -notmatch '^zsh-.+\.pkg\.tar\.zst$' -or $sha256 -notmatch '^[a-fA-F0-9]{64}$') {
+                    throw 'The MSYS2 package index returned incomplete Zsh metadata. Nothing was installed.'
+                }
+
+                return [PSCustomObject]@{
+                    Url = "https://mirror.msys2.org/msys/x86_64/$filename"
+                    Sha256 = $sha256
+                    Tar = $tar
+                }
             }
         }
     }
 
-    throw 'The MSYS2 package index did not contain the x86_64 Zsh package. Nothing was installed.'
+    throw 'No available tar.exe could read the Zstandard-compressed MSYS2 package index. Nothing was installed.'
 }
 
 function Get-RelativePath {
@@ -116,10 +122,11 @@ $backupRoot = Join-Path $env:USERPROFILE (".dotfiles-backups\git-bash-zsh\" + (G
 try {
     New-Item -ItemType Directory -Path $workRoot, $extractRoot -Force | Out-Null
 
-    $tar = Get-TarCommand -GitRoot $GitRoot
+    $tarCandidates = @(Get-TarCommands -GitRoot $GitRoot)
     Write-Host 'Reading the current Zsh package from the MSYS2 package index...'
     Invoke-WebRequest -Uri 'https://repo.msys2.org/msys/x86_64/msys.db' -OutFile $databasePath
-    $package = Get-LatestZshPackage -DatabasePath $databasePath -Tar $tar
+    $package = Get-LatestZshPackage -DatabasePath $databasePath -TarCandidates $tarCandidates
+    $tar = $package.Tar
     Write-Host "Downloading $($package.Url)..."
     Invoke-WebRequest -Uri $package.Url -OutFile $packagePath
 
