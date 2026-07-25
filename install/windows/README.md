@@ -19,13 +19,12 @@ script.
 
 ## Windows Terminal
 
-Git Bash, PowerShell, elevated PowerShell and Command Prompt are fixed profiles.
-Installed WSL distributions are discovered automatically. Current WSL versions
-supply `Microsoft.WSL` profile fragments containing their launch commands and
-icons; Terminal's built-in `Windows.Terminal.Wsl` discovery remains enabled as
-a fallback for installations without those fragments. No machine-specific WSL
-GUID is stored here; `Ctrl+Shift+5` targets the stable profile name `Ubuntu`
-instead. The shortcuts are `Ctrl+Shift+1` through `Ctrl+Shift+5` in order.
+Git Bash, PowerShell, elevated PowerShell, Command Prompt and Ubuntu are fixed
+profiles with repository-owned GUIDs. Ubuntu starts `wsl.exe -d Ubuntu --cd ~`
+directly and deliberately has no configured icon. Automatic WSL profile sources
+are disabled so machine-specific generated profiles cannot replace or duplicate
+it. The shortcuts are `Ctrl+Shift+1` through `Ctrl+Shift+5` in order. Additional
+WSL distributions require another explicit fixed profile.
 
 ## Git Bash with Zsh
 

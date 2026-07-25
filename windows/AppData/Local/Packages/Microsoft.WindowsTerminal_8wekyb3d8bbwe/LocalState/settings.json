@@ -55,7 +55,7 @@
         {
             "command": {
                 "action": "newTab",
-                "profile": "Ubuntu"
+                "profile": "{00000000-0000-0000-ba54-000000000005}"
             },
             "keys": "ctrl+shift+5"
         }
@@ -64,10 +64,13 @@
     "copyOnSelect": false,
     "defaultProfile": "{00000000-0000-0000-ba54-000000000002}",
     "disabledProfileSources": [
+        "Microsoft.Terminal.Wsl",
+        "Microsoft.WSL",
         "Windows.Terminal.Azure",
         "Windows.Terminal.PowershellCore",
         "Windows.Terminal.SSH",
-        "Windows.Terminal.VisualStudio"
+        "Windows.Terminal.VisualStudio",
+        "Windows.Terminal.Wsl"
     ],
     "language": "en-US",
     "newTabMenu": [
@@ -116,6 +119,15 @@
                 "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
                 "name": "Command Prompt",
                 "tabColor": "#000000"
+            },
+            {
+                "commandline": "wsl.exe -d Ubuntu --cd ~",
+                "cursorShape": "filledBox",
+                "guid": "{00000000-0000-0000-ba54-000000000005}",
+                "hidden": false,
+                "name": "Ubuntu",
+                "suppressApplicationTitle": true,
+                "tabColor": "#E95420"
             }
         ]
     },
