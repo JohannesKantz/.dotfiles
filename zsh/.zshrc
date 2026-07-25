@@ -74,7 +74,17 @@ fi
 #  SHELL INTEGRATION  #
 #######################
 
-if (( $+commands[mise] )); then
+# The native Windows mise binary emits Windows paths that Zsh interprets as
+# escapes. In Git Bash, use mise's Windows shims through their MSYS path.
+if [[ -n "${MSYSTEM:-}" && -n "${LOCALAPPDATA:-}" ]] && (( $+commands[cygpath] )); then
+    mise_shims="$(cygpath -u "$LOCALAPPDATA")/mise/shims"
+    if [[ -d "$mise_shims" ]]; then
+        path=("$mise_shims" $path)
+        typeset -U path
+        export PATH
+    fi
+    unset mise_shims
+elif (( $+commands[mise] )); then
     eval "$(mise activate zsh)"
 fi
 

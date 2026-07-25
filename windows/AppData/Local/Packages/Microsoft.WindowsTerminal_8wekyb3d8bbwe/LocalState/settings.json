@@ -67,8 +67,7 @@
         "Windows.Terminal.Azure",
         "Windows.Terminal.PowershellCore",
         "Windows.Terminal.SSH",
-        "Windows.Terminal.VisualStudio",
-        "Windows.Terminal.Wsl"
+        "Windows.Terminal.VisualStudio"
     ],
     "language": "en-US",
     "newTabMenu": [
@@ -79,17 +78,18 @@
     "profiles": {
         "defaults": {
             "bellStyle": "none",
-            "colorScheme": "One Half Dark",
+            "colorScheme": "Dotfiles Dark",
             "cursorShape": "bar",
-            "opacity": 75,
+            "font": {
+                "face": "CaskaydiaMono Nerd Font Mono",
+                "weight": "medium"
+            },
+            "opacity": 92,
             "useAcrylic": true
         },
         "list": [
             {
                 "commandline": "%ProgramFiles%\\Git\\bin\\bash.exe -li",
-                "font": {
-                    "face": "CaskaydiaMono Nerd Font Mono"
-                },
                 "guid": "{00000000-0000-0000-ba54-000000000002}",
                 "icon": "%ProgramFiles%\\Git\\mingw64\\share\\git\\git-for-windows.ico",
                 "name": "Git Bash",
@@ -113,33 +113,27 @@
             },
             {
                 "commandline": "cmd.exe",
-                "font": {
-                    "face": "Cascadia Mono"
-                },
                 "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
                 "name": "Command Prompt",
                 "tabColor": "#000000"
             },
             {
-                "commandline": "wsl.exe -d Ubuntu --cd ~",
                 "cursorShape": "filledBox",
-                "font": {
-                    "face": "CaskaydiaMono Nerd Font Mono",
-                    "weight": "normal"
-                },
                 "guid": "{2c4de342-38b7-51cf-b940-2309a097f518}",
-                "icon": "https://ubuntu.com/favicon.ico",
+                "hidden": false,
                 "name": "Ubuntu",
+                "source": "Windows.Terminal.Wsl",
+                "suppressApplicationTitle": true,
                 "tabColor": "#E95420"
             }
         ]
     },
     "schemes": [
         {
-            "background": "#282C34",
-            "black": "#282C34",
+            "background": "#1E2127",
+            "black": "#1E2127",
             "blue": "#61AFEF",
-            "brightBlack": "#5A6374",
+            "brightBlack": "#7F848E",
             "brightBlue": "#61AFEF",
             "brightCyan": "#56B6C2",
             "brightGreen": "#98C379",
@@ -149,13 +143,13 @@
             "brightYellow": "#D19A66",
             "cursorColor": "#FFFFFF",
             "cyan": "#56B6C2",
-            "foreground": "#ABB2BF",
+            "foreground": "#D8DEE9",
             "green": "#98C379",
-            "name": "One Half Dark",
+            "name": "Dotfiles Dark",
             "purple": "#C678DD",
             "red": "#E06C75",
-            "selectionBackground": "#FFFFFF",
-            "white": "#ABB2BF",
+            "selectionBackground": "#3E4451",
+            "white": "#D8DEE9",
             "yellow": "#D19A66"
         }
     ],
