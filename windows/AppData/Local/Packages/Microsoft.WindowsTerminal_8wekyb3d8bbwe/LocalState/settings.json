@@ -55,7 +55,7 @@
         {
             "command": {
                 "action": "newTab",
-                "profile": "{c3de0ea4-5994-52b3-9b91-852791ef9d94}"
+                "profile": "Ubuntu"
             },
             "keys": "ctrl+shift+5"
         }
@@ -117,15 +117,6 @@
                 "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
                 "name": "Command Prompt",
                 "tabColor": "#000000"
-            },
-            {
-                "cursorShape": "filledBox",
-                "guid": "{c3de0ea4-5994-52b3-9b91-852791ef9d94}",
-                "hidden": false,
-                "name": "Ubuntu",
-                "source": "Microsoft.WSL",
-                "suppressApplicationTitle": true,
-                "tabColor": "#E95420"
             }
         ]
     },
