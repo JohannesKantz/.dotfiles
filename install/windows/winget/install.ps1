@@ -18,6 +18,7 @@ $wingetOptions = @(
     '--disable-interactivity'
 )
 $failedPackages = @()
+$failedRequiredPackages = @()
 $changesRequired = $false
 
 function Test-WingetPackageInstalled {
@@ -31,7 +32,8 @@ function Install-WingetPackage {
     param(
         [Parameter(Mandatory)][string]$Id,
         [string]$InstallerArguments,
-        [switch]$Force
+        [switch]$Force,
+        [switch]$Required
     )
 
     if (-not $Force -and (Test-WingetPackageInstalled -Id $Id)) {
@@ -57,7 +59,13 @@ function Install-WingetPackage {
 
     & winget @arguments
     if ($LASTEXITCODE -ne 0) {
-        $script:failedPackages += "$Id (exit code $LASTEXITCODE)"
+        $failure = "$Id (exit code $LASTEXITCODE)"
+        if ($Required) {
+            $script:failedRequiredPackages += $failure
+        }
+        else {
+            $script:failedPackages += $failure
+        }
     }
 }
 
@@ -102,7 +110,7 @@ Install-WingetPackage 'AgileBits.1Password'
 # Install-WingetPackage 'Figma.Figma'
 
 # Developer tools
-Install-WingetPackage 'Git.Git'
+Install-WingetPackage 'Git.Git' -Required
 Install-WingetPackage 'GitHub.cli'
 Install-WingetPackage 'Gyan.FFmpeg'
 Install-WingetPackage 'GnuWin32.Grep'
@@ -139,7 +147,11 @@ Install-WingetPackage 'Microsoft.VisualStudioCode' `
 # Install-WingetPackage 'BlenderFoundation.Blender'
 
 if ($failedPackages.Count -gt 0) {
-    throw "WinGet could not install: $($failedPackages -join ', '). Review the output, then run setup.ps1 again."
+    Write-Warning "WinGet could not install these non-critical packages: $($failedPackages -join ', '). Setup will continue."
+}
+
+if ($failedRequiredPackages.Count -gt 0) {
+    throw "WinGet could not install required packages: $($failedRequiredPackages -join ', ')."
 }
 
 if ($Check) {
