@@ -66,6 +66,21 @@ install_extra_packages() {
     fi
 }
 
+install_mise() {
+    if command -v mise >/dev/null 2>&1; then
+        return
+    fi
+
+    printf 'Installing mise from mise.run\n'
+    curl -fsSL https://mise.run | sh
+
+    export PATH="$HOME/.local/bin:$PATH"
+    if ! command -v mise >/dev/null 2>&1; then
+        printf 'mise was installed but is not available on PATH.\n' >&2
+        exit 1
+    fi
+}
+
 printf 'Setting up Linux\n\n'
 
 if command -v apt-get >/dev/null 2>&1; then
@@ -76,7 +91,6 @@ if command -v apt-get >/dev/null 2>&1; then
         curl
         git
         lsof
-        mise
         neovim
         ripgrep
         stow
@@ -145,7 +159,6 @@ elif command -v dnf >/dev/null 2>&1; then
         curl
         git
         lsof
-        mise
         neovim
         ripgrep
         stow
@@ -212,7 +225,6 @@ elif command -v pacman >/dev/null 2>&1; then
         curl
         git
         lsof
-        mise
         neovim
         ripgrep
         stow
@@ -277,6 +289,10 @@ fi
 
 install -d -m 700 "$HOME/.ssh"
 install -d -m 755 "$HOME/.config" "$HOME/.cache" "$HOME/.local/bin" "$HOME/dev"
+
+# mise is not available in every distribution repository (including the default
+# Debian/Ubuntu repositories), so install it from its official installer.
+install_mise
 
 # Debian-family packages expose these commands under different names.
 if ! command -v bat >/dev/null 2>&1 && command -v batcat >/dev/null 2>&1; then
