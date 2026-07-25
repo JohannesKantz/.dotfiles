@@ -62,7 +62,10 @@ fi
 install_packages() {
     case "$package_manager" in
         apt)
-            "${as_root[@]}" apt-get install -y "$@"
+            # Avoid debconf prompts (for example, iperf3's optional daemon).
+            # This setup installs command-line tools only; services are started
+            # explicitly when needed.
+            "${as_root[@]}" env DEBIAN_FRONTEND=noninteractive apt-get install -y "$@"
             ;;
         dnf)
             "${as_root[@]}" dnf install -y "$@"
@@ -120,6 +123,25 @@ install_mise() {
         printf 'mise was installed but is not available on PATH.\n' >&2
         exit 1
     fi
+}
+
+backup_stow_conflict() {
+    local relative_path="$1"
+    local target_path="$HOME/$relative_path"
+    local backup_path
+
+    [[ -e "$target_path" || -L "$target_path" ]] || return
+    [[ -L "$target_path" ]] && return
+
+    if [[ -d "$target_path" ]]; then
+        printf 'Cannot replace %s because it is a directory. Resolve this Stow conflict manually.\n' "$target_path" >&2
+        exit 1
+    fi
+
+    backup_path="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)/$relative_path"
+    install -d -m 700 "$(dirname -- "$backup_path")"
+    mv -- "$target_path" "$backup_path"
+    printf 'Backed up existing %s to %s\n' "$target_path" "$backup_path"
 }
 
 printf 'Setting up Linux\n\n'
@@ -318,6 +340,11 @@ fi
 if ! command -v fd >/dev/null 2>&1 && command -v fdfind >/dev/null 2>&1; then
     ln -sfn "$(command -v fdfind)" "$HOME/.local/bin/fd"
 fi
+
+# Preserve common distribution-created shell files before Stow links this
+# repository's managed versions into place.
+backup_stow_conflict .bashrc
+backup_stow_conflict .profile
 
 stow --dir "$repo_dir" --target "$HOME" --restow --verbose "${packages[@]}"
 
