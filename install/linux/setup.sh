@@ -144,6 +144,27 @@ backup_stow_conflict() {
     printf 'Backed up existing %s to %s\n' "$target_path" "$backup_path"
 }
 
+set_zsh_as_default_shell() {
+    local zsh_path
+    local current_shell
+
+    zsh_path="$(command -v zsh)"
+    current_shell="$(getent passwd "$(id -un)" | cut -d: -f7)"
+
+    if [[ "$current_shell" == "$zsh_path" ]]; then
+        printf 'Zsh is already the default shell.\n'
+        return
+    fi
+
+    if ! grep -Fqx "$zsh_path" /etc/shells; then
+        printf 'Zsh (%s) is not listed in /etc/shells. Cannot set it as the default shell.\n' "$zsh_path" >&2
+        return 1
+    fi
+
+    printf 'Setting Zsh as the default shell for %s\n' "$(id -un)"
+    chsh -s "$zsh_path"
+}
+
 printf 'Setting up Linux\n\n'
 
 if command -v apt-get >/dev/null 2>&1; then
@@ -347,6 +368,8 @@ backup_stow_conflict .bashrc
 backup_stow_conflict .profile
 
 stow --dir "$repo_dir" --target "$HOME" --restow --verbose "${packages[@]}"
+
+set_zsh_as_default_shell
 
 # Install the runtimes declared in the now-linked global Mise configuration.
 mise install
