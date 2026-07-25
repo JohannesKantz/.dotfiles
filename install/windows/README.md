@@ -20,13 +20,12 @@ script.
 ## Windows Terminal
 
 Git Bash, PowerShell, elevated PowerShell and Command Prompt are fixed profiles.
-Ubuntu is supplied entirely by the `Microsoft.WSL` profile fragment created by
-the installed WSL package, including its launch command and icon. Its
-installation-specific GUID is deliberately not stored here; `Ctrl+Shift+5`
-targets the stable profile name `Ubuntu` instead. The shortcuts are
-`Ctrl+Shift+1` through `Ctrl+Shift+5` in order. The legacy built-in WSL profile
-generator stays disabled to avoid a duplicate Ubuntu profile; Debian and old
-Visual Studio profiles stay removed.
+Installed WSL distributions are discovered automatically. Current WSL versions
+supply `Microsoft.WSL` profile fragments containing their launch commands and
+icons; Terminal's built-in `Windows.Terminal.Wsl` discovery remains enabled as
+a fallback for installations without those fragments. No machine-specific WSL
+GUID is stored here; `Ctrl+Shift+5` targets the stable profile name `Ubuntu`
+instead. The shortcuts are `Ctrl+Shift+1` through `Ctrl+Shift+5` in order.
 
 ## Git Bash with Zsh
 
