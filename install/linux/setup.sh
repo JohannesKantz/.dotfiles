@@ -150,7 +150,7 @@ if command -v apt-get >/dev/null 2>&1; then
         sqlite-utils
         sqlite3
         stow
-        tldr
+        tealdeer
         tmux
         tree
         unzip
