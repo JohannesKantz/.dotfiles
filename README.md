@@ -55,7 +55,7 @@ This covers Windows Terminal, PowerToys, and WinGet settings.
 
 ## Full Setup
 
-Use these only when you also want the package lists and platform setup.
+Use these only when you also want the packages and platform setup.
 
 ```bash
 # macOS: Homebrew packages, links, and system settings
