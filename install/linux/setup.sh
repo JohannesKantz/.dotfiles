@@ -41,12 +41,10 @@ packages=(
     bat
     btop
     curl
-    fastfetch
     functions
     git
     linux
     mise
-    neofetch
     nvim
     ripgrep
     ssh
@@ -73,6 +71,24 @@ install_packages() {
             "${as_root[@]}" pacman -S --needed --noconfirm "$@"
             ;;
     esac
+}
+
+apt_package_available() {
+    apt-cache show "$1" >/dev/null 2>&1
+}
+
+select_apt_fetch_package() {
+    # neofetch was removed from current Debian repositories.  Older Debian and
+    # Ubuntu releases may not carry fastfetch yet, so retain a safe fallback.
+    if apt_package_available fastfetch; then
+        base_packages+=(fastfetch)
+        packages+=(fastfetch)
+    elif apt_package_available neofetch; then
+        base_packages+=(neofetch)
+        packages+=(neofetch)
+    else
+        printf 'Neither fastfetch nor neofetch is available from the configured APT repositories. Skipping system-info tool.\n' >&2
+    fi
 }
 
 install_extra_packages() {
@@ -119,7 +135,6 @@ if command -v apt-get >/dev/null 2>&1; then
         curl
         dnsutils
         fd-find
-        fastfetch
         fzf
         gh
         git
@@ -128,7 +143,6 @@ if command -v apt-get >/dev/null 2>&1; then
         jq
         libimage-exiftool-perl
         lsof
-        neofetch
         neovim
         nmap
         ripgrep
@@ -163,6 +177,7 @@ if command -v apt-get >/dev/null 2>&1; then
         rclone
     )
     "${as_root[@]}" apt-get update
+    select_apt_fetch_package
     install_packages "${base_packages[@]}"
 elif command -v dnf >/dev/null 2>&1; then
     package_manager=dnf
@@ -183,7 +198,6 @@ elif command -v dnf >/dev/null 2>&1; then
         iperf3
         jq
         lsof
-        neofetch
         neovim
         nmap
         perl-Image-ExifTool
@@ -220,6 +234,7 @@ elif command -v dnf >/dev/null 2>&1; then
         python3-sqlite-utils
         rclone
     )
+    packages+=(fastfetch)
     install_packages "${base_packages[@]}"
 elif command -v pacman >/dev/null 2>&1; then
     package_manager=pacman
@@ -239,7 +254,6 @@ elif command -v pacman >/dev/null 2>&1; then
         iperf3
         jq
         lsof
-        neofetch
         neovim
         nmap
         perl-image-exiftool
@@ -275,6 +289,7 @@ elif command -v pacman >/dev/null 2>&1; then
         protobuf
         rclone
     )
+    packages+=(fastfetch)
     "${as_root[@]}" pacman -Syu --noconfirm
     install_packages "${base_packages[@]}"
 else
