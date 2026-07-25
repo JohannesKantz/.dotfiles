@@ -19,11 +19,12 @@ script.
 
 ## Windows Terminal
 
-The profiles and shortcuts are deliberately fixed, rather than generated from
-installed shells: Git Bash, PowerShell, elevated PowerShell, Command Prompt,
-then Ubuntu. They are `Ctrl+Shift+1` through `Ctrl+Shift+5` in that order.
-Ubuntu is visible before WSL is installed; it starts working as soon as the
-Ubuntu distribution exists. Debian and old Visual Studio profiles stay removed.
+Git Bash, PowerShell, elevated PowerShell and Command Prompt are fixed profiles.
+Ubuntu overlays the `Microsoft.WSL` profile fragment supplied by the installed
+WSL package so Terminal uses WSL's launch command and Ubuntu icon. The shortcuts
+are `Ctrl+Shift+1` through `Ctrl+Shift+5` in that order. The legacy built-in WSL
+profile generator stays disabled to avoid a duplicate Ubuntu profile; Debian
+and old Visual Studio profiles stay removed.
 
 ## Git Bash with Zsh
 
