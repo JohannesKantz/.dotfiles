@@ -90,14 +90,14 @@ Install-WingetPackage 'Microsoft.MPEG2VideoExtension_8wekyb3d8bbwe'
 Install-WingetPackage 'Microsoft.RawImageExtension_8wekyb3d8bbwe'
 
 # Personal apps
-Install-WingetPackage 'BraveSoftware.BraveBrowser'
-Install-WingetPackage 'RARLab.WinRAR'
+# Install-WingetPackage 'BraveSoftware.BraveBrowser'
+# Install-WingetPackage 'RARLab.WinRAR'
 Install-WingetPackage 'Spotify.Spotify'
 Install-WingetPackage 'Discord.Discord'
 Install-WingetPackage 'TeamSpeakSystems.TeamSpeakClient'
 Install-WingetPackage 'AgileBits.1Password'
-Install-WingetPackage 'Nvidia.Broadcast'
-Install-WingetPackage 'Figma.Figma'
+# Install-WingetPackage 'Nvidia.Broadcast'
+# Install-WingetPackage 'Figma.Figma'
 
 # Developer tools
 Install-WingetPackage 'Git.Git'
