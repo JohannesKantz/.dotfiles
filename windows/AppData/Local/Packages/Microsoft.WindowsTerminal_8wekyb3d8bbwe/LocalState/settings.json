@@ -88,7 +88,7 @@
             {
                 "commandline": "%ProgramFiles%\\Git\\bin\\bash.exe -li",
                 "font": {
-                    "face": "Consolas NF"
+                    "face": "CaskaydiaMono Nerd Font Mono"
                 },
                 "guid": "{00000000-0000-0000-ba54-000000000002}",
                 "icon": "%ProgramFiles%\\Git\\mingw64\\share\\git\\git-for-windows.ico",
@@ -124,7 +124,7 @@
                 "commandline": "wsl.exe -d Ubuntu --cd ~",
                 "cursorShape": "filledBox",
                 "font": {
-                    "face": "Consolas NF",
+                    "face": "CaskaydiaMono Nerd Font Mono",
                     "weight": "normal"
                 },
                 "guid": "{2c4de342-38b7-51cf-b940-2309a097f518}",

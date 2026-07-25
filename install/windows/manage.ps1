@@ -147,7 +147,10 @@ foreach ($entry in (Get-Entries)) {
     if (-not (Test-Path -LiteralPath $source)) { throw "[$($entry.Name)] source missing: $source" }
 
     if ($Action -eq 'Link') {
-        if ($entry.Mode -ne 'Link') { Write-Warning "[$($entry.Name)] is Copy mode; use Apply."; continue }
+        if ($entry.Mode -ne 'Link') {
+            if ($Name) { Write-Warning "[$($entry.Name)] is Copy mode; use Apply." }
+            continue
+        }
         $item = Get-TargetItem $target
         $backup = $null
         if ($item) {
@@ -168,7 +171,10 @@ foreach ($entry in (Get-Entries)) {
     }
 
     if ($Action -eq 'Apply') {
-        if ($entry.Mode -ne 'Copy') { Write-Warning "[$($entry.Name)] is Link mode; use Link."; continue }
+        if ($entry.Mode -ne 'Copy') {
+            if ($Name) { Write-Warning "[$($entry.Name)] is Link mode; use Link." }
+            continue
+        }
         $item = Get-TargetItem $target
         if ($item -and (Test-SameFileContent -Entry $entry -Source $source -Target $target)) {
             Write-Host "[$($entry.Name)] copy already current"

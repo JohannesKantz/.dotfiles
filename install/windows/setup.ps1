@@ -40,6 +40,39 @@ function Install-Scoop {
     }
 }
 
+function Get-ScoopRoot {
+    if ($env:SCOOP) {
+        return $env:SCOOP
+    }
+
+    return (Join-Path $HOME 'scoop')
+}
+
+function Test-ScoopAppInstalled {
+    param([Parameter(Mandatory)][string]$Name)
+
+    return Test-Path -LiteralPath (Join-Path (Get-ScoopRoot) "apps\$Name\current") -PathType Container
+}
+
+function Install-NerdFont {
+    $bucketName = 'nerd-fonts'
+    $fontPackage = 'CascadiaMono-NF-Mono'
+    $bucketPath = Join-Path (Get-ScoopRoot) "buckets\$bucketName"
+
+    if (-not (Test-Path -LiteralPath $bucketPath -PathType Container)) {
+        & scoop bucket add $bucketName
+        if ($LASTEXITCODE -ne 0) { throw "Could not add the Scoop $bucketName bucket (exit code $LASTEXITCODE)." }
+    }
+
+    if (Test-ScoopAppInstalled -Name $fontPackage) {
+        Write-Host 'CaskaydiaMono Nerd Font Mono already installed.'
+        return
+    }
+
+    & scoop install "$bucketName/$fontPackage"
+    if ($LASTEXITCODE -ne 0) { throw "Nerd Font installation failed (exit code $LASTEXITCODE)." }
+}
+
 function Invoke-ElevatedPhase {
     param(
         [switch]$Packages,
@@ -121,8 +154,9 @@ Install-Scoop
 & scoop update
 if ($LASTEXITCODE -ne 0) { throw "Scoop update failed (exit code $LASTEXITCODE)." }
 
-$scoopMisePath = & scoop prefix mise 2>$null
-if ($LASTEXITCODE -ne 0) {
+Install-NerdFont
+
+if (-not (Test-ScoopAppInstalled -Name 'mise')) {
     if (Get-Command mise -ErrorAction SilentlyContinue) {
         throw 'Mise is already installed outside Scoop. Refusing to replace it; remove that installation or migrate it to Scoop first.'
     }
