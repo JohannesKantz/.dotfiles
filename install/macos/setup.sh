@@ -45,6 +45,16 @@ fi
 
 printf 'Xcode Command Line Tools already installed.\n'
 
+printf 'Requesting administrator access once for the complete setup.\n'
+sudo -v
+while true; do
+    sudo -n true
+    sleep 60
+    kill -0 "$$" || exit
+done 2>/dev/null &
+sudo_keepalive_pid="$!"
+trap 'kill "$sudo_keepalive_pid" 2>/dev/null || true' EXIT
+
 if ! command -v brew >/dev/null 2>&1; then
     printf 'Homebrew not found. Installing Homebrew.\n'
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"

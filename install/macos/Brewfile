@@ -49,7 +49,7 @@ brew "zoxide"
 
 cask "1password"
 cask "nikitabobko/tap/aerospace", trusted: true
-cask "claude-code@latest"
+cask "claude-code"
 cask "codex"
 cask "discord"
 cask "docker-desktop"
