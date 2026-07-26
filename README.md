@@ -22,12 +22,17 @@ change system settings.
 # Preview first
 ./install/link.sh --dry-run
 
+# Back up conflicting files, then create the links
+./install/link.sh --backup
+
 # Create or refresh the links
 ./install/link.sh
 ```
 
 Existing regular files are not overwritten. Stow reports them as conflicts so
-you can compare or back them up first.
+you can compare them first. `--backup` moves only conflicting managed paths to
+`~/.dotfiles-backups/<timestamp>` before linking. If `~/.ssh/config` exists,
+preserve it as `~/.ssh/config.local` before using `--backup`.
 
 ### Windows
 
@@ -61,8 +66,14 @@ Use these only when you also want the packages and platform setup.
 # macOS: Homebrew packages, links, and system settings
 ./install/macos/setup.sh
 
+# First run on a Mac with existing dotfiles
+./install/macos/setup.sh --backup
+
 # Linux: system packages, links, and Mise tools
 ./install/linux/setup.sh
+
+# First run on Linux with existing dotfiles
+./install/linux/setup.sh --backup
 
 # Include optional development and CLI packages
 ./install/linux/setup.sh --extras

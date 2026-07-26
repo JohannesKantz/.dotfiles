@@ -9,6 +9,31 @@ fi
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 repo_dir="$(cd -- "$script_dir/../.." && pwd)"
 
+usage() {
+    printf 'Usage: %s [--backup]\n' "${0##*/}"
+    printf '\nInstall macOS packages, dotfiles, runtimes, and system settings.\n'
+    printf '  --backup  Back up existing files that conflict with managed dotfiles.\n'
+}
+
+backup_conflicts=false
+while (($#)); do
+    case "$1" in
+        --backup)
+            backup_conflicts=true
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        *)
+            printf 'Unknown option: %s\n\n' "$1" >&2
+            usage >&2
+            exit 2
+            ;;
+    esac
+    shift
+done
+
 stow_packages=(
     aliases
     agents
@@ -64,6 +89,13 @@ fi
 
 # Keep private SSH files outside the repository; Stow only links the config.
 install -d -m 700 "$HOME/.ssh"
+
+if [[ "$backup_conflicts" == true ]]; then
+    "$repo_dir/install/backup-conflicts.sh" \
+        "$repo_dir" \
+        "$HOME" \
+        "${stow_packages[@]}"
+fi
 
 stow --dir "$repo_dir" --target "$HOME" --restow --verbose "${stow_packages[@]}"
 

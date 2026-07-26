@@ -2,17 +2,21 @@
 set -Eeuo pipefail
 
 usage() {
-    printf 'Usage: %s [--dry-run]\n' "$0"
+    printf 'Usage: %s [--dry-run|--backup]\n' "$0"
 }
 
 stow_options=()
 dry_run=false
+backup_conflicts=false
 case "${1:-}" in
     "")
         ;;
     --dry-run)
         stow_options+=(--simulate)
         dry_run=true
+        ;;
+    --backup)
+        backup_conflicts=true
         ;;
     -h|--help)
         usage
@@ -94,6 +98,13 @@ esac
 
 if [[ "$dry_run" == false ]]; then
     install -d -m 700 "$HOME/.ssh"
+fi
+
+if [[ "$backup_conflicts" == true ]]; then
+    "$repo_dir/install/backup-conflicts.sh" \
+        "$repo_dir" \
+        "$HOME" \
+        "${packages[@]}"
 fi
 
 stow \

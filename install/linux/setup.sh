@@ -5,16 +5,21 @@ script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 repo_dir="$(cd -- "$script_dir/../.." && pwd)"
 
 usage() {
-    printf 'Usage: %s [--extras]\n' "${0##*/}"
+    printf 'Usage: %s [--extras] [--backup]\n' "${0##*/}"
     printf '\nInstall base Linux packages and dotfiles.\n'
     printf '  --extras  Also install optional development and CLI packages.\n'
+    printf '  --backup  Back up existing files that conflict with managed dotfiles.\n'
 }
 
 install_extras=false
+backup_conflicts=false
 while (($#)); do
     case "$1" in
         --extras)
             install_extras=true
+            ;;
+        --backup)
+            backup_conflicts=true
             ;;
         -h|--help)
             usage
@@ -123,25 +128,6 @@ install_mise() {
         printf 'mise was installed but is not available on PATH.\n' >&2
         exit 1
     fi
-}
-
-backup_stow_conflict() {
-    local relative_path="$1"
-    local target_path="$HOME/$relative_path"
-    local backup_path
-
-    [[ -e "$target_path" || -L "$target_path" ]] || return
-    [[ -L "$target_path" ]] && return
-
-    if [[ -d "$target_path" ]]; then
-        printf 'Cannot replace %s because it is a directory. Resolve this Stow conflict manually.\n' "$target_path" >&2
-        exit 1
-    fi
-
-    backup_path="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)/$relative_path"
-    install -d -m 700 "$(dirname -- "$backup_path")"
-    mv -- "$target_path" "$backup_path"
-    printf 'Backed up existing %s to %s\n' "$target_path" "$backup_path"
 }
 
 set_zsh_as_default_shell() {
@@ -362,10 +348,12 @@ if ! command -v fd >/dev/null 2>&1 && command -v fdfind >/dev/null 2>&1; then
     ln -sfn "$(command -v fdfind)" "$HOME/.local/bin/fd"
 fi
 
-# Preserve common distribution-created shell files before Stow links this
-# repository's managed versions into place.
-backup_stow_conflict .bashrc
-backup_stow_conflict .profile
+if [[ "$backup_conflicts" == true ]]; then
+    "$repo_dir/install/backup-conflicts.sh" \
+        "$repo_dir" \
+        "$HOME" \
+        "${packages[@]}"
+fi
 
 stow --dir "$repo_dir" --target "$HOME" --restow --verbose "${packages[@]}"
 
