@@ -64,6 +64,59 @@ if [[ ${EUID:-$(id -u)} -ne 0 ]]; then
     as_root=(sudo)
 fi
 
+sudo_keepalive_pid=
+
+request_sudo_access() {
+    if sudo -n true 2>/dev/null; then
+        return
+    fi
+
+    if [[ ! -t 0 ]]; then
+        printf 'Administrator access is required, but no terminal is available for the password prompt.\n' >&2
+        return 1
+    fi
+
+    # Some distributions enable sudo's "pwfeedback" option, which prints an
+    # asterisk for every character. Read one line with terminal echo disabled
+    # and stream it directly to sudo; the password is never stored in a shell
+    # variable or passed as a command-line argument.
+    (
+        local exit_code
+        local tty_state
+
+        tty_state="$(stty -g)"
+        trap "stty $tty_state 2>/dev/null || true" EXIT
+        trap 'exit 130' HUP INT TERM
+
+        printf 'Administrator password for %s: ' "$(id -un)" >&2
+        stty -echo
+
+        if head -n 1 | sudo -S -p '' -v; then
+            exit_code=0
+        else
+            exit_code=$?
+        fi
+
+        printf '\n' >&2
+        exit "$exit_code"
+    )
+}
+
+start_sudo_keepalive() {
+    while true; do
+        sudo -n true || exit
+        sleep 60
+        kill -0 "$$" || exit
+    done 2>/dev/null &
+    sudo_keepalive_pid="$!"
+}
+
+stop_sudo_keepalive() {
+    if [[ -n "$sudo_keepalive_pid" ]]; then
+        kill "$sudo_keepalive_pid" 2>/dev/null || true
+    fi
+}
+
 install_packages() {
     case "$package_manager" in
         apt)
@@ -179,10 +232,16 @@ set_zsh_as_default_shell() {
     fi
 
     printf 'Setting Zsh as the default shell for %s\n' "$(id -un)"
-    chsh -s "$zsh_path"
+    "${as_root[@]}" chsh -s "$zsh_path" "$(id -un)"
 }
 
 printf 'Setting up Linux\n\n'
+
+if ((${#as_root[@]})); then
+    request_sudo_access
+    start_sudo_keepalive
+    trap stop_sudo_keepalive EXIT
+fi
 
 if command -v apt-get >/dev/null 2>&1; then
     package_manager=apt
