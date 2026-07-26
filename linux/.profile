@@ -25,6 +25,7 @@ fi
 # user binaries
 [ -d "$HOME/bin" ] && PATH="$HOME/bin:$PATH"
 [ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH"
+[ -d "$HOME/.opencode/bin" ] && PATH="$HOME/.opencode/bin:$PATH"
 
 # Cargo
 [ -s "$HOME/.cargo/env" ] && \. "$HOME/.cargo/env"

@@ -130,6 +130,37 @@ install_mise() {
     fi
 }
 
+install_terminal_agents() {
+    if command -v codex >/dev/null 2>&1; then
+        printf 'Codex is already installed.\n'
+    else
+        printf 'Installing Codex with the official installer.\n'
+        curl -fsSL https://chatgpt.com/codex/install.sh | sh
+    fi
+
+    if command -v claude >/dev/null 2>&1; then
+        printf 'Claude Code is already installed.\n'
+    else
+        printf 'Installing Claude Code with the official installer.\n'
+        curl -fsSL https://claude.ai/install.sh | bash
+    fi
+
+    if command -v opencode >/dev/null 2>&1; then
+        printf 'OpenCode is already installed.\n'
+    else
+        printf 'Installing OpenCode with the official installer.\n'
+        curl -fsSL https://opencode.ai/install | bash -s -- --no-modify-path
+    fi
+
+    local agent
+    for agent in codex claude opencode; do
+        if ! command -v "$agent" >/dev/null 2>&1; then
+            printf '%s was installed but is not available on PATH.\n' "$agent" >&2
+            exit 1
+        fi
+    done
+}
+
 set_zsh_as_default_shell() {
     local zsh_path
     local current_shell
@@ -335,6 +366,8 @@ fi
 install -d -m 700 "$HOME/.ssh"
 install -d -m 755 "$HOME/.config" "$HOME/.cache" "$HOME/.local/bin" "$HOME/dev"
 
+export PATH="$HOME/.opencode/bin:$HOME/.local/bin:$PATH"
+
 # mise is not available in every distribution repository (including the default
 # Debian/Ubuntu repositories), so install it from its official installer.
 install_mise
@@ -361,5 +394,7 @@ set_zsh_as_default_shell
 
 # Install the runtimes declared in the now-linked global Mise configuration.
 mise install
+
+install_terminal_agents
 
 printf '\nLinux setup complete. Restart your shell.\n'

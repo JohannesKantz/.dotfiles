@@ -69,7 +69,7 @@ Use these only when you also want the packages and platform setup.
 # First run on a Mac with existing dotfiles
 ./install/macos/setup.sh --backup
 
-# Linux: system packages, links, and Mise tools
+# Linux: system packages, links, Mise runtimes, and official agent installers
 ./install/linux/setup.sh
 
 # First run on Linux with existing dotfiles
