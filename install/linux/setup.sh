@@ -188,7 +188,8 @@ install_terminal_agents() {
         printf 'Codex is already installed.\n'
     else
         printf 'Installing Codex with the official installer.\n'
-        curl -fsSL https://chatgpt.com/codex/install.sh | sh
+        curl -fsSL https://chatgpt.com/codex/install.sh |
+            CODEX_NON_INTERACTIVE=1 sh
     fi
 
     if command -v claude >/dev/null 2>&1; then
