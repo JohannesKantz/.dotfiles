@@ -74,28 +74,6 @@ defaults write com.apple.dock magnification -bool false
 defaults write com.apple.dock mru-spaces -bool false
 defaults write com.apple.dock expose-animation-duration -float 0.1
 
-defaults write com.apple.dock persistent-apps -array
-
-add_app_to_dock() {
-    local app_path="$1"
-
-    if [[ ! -d "$app_path" ]]; then
-        printf 'Skipping missing Dock app: %s\n' "$app_path" >&2
-        return 0
-    fi
-
-    defaults write com.apple.dock persistent-apps -array-add \
-        "<dict><key>tile-data</key><dict><key>file-data</key><dict><key>_CFURLString</key><string>$app_path</string><key>_CFURLStringType</key><integer>0</integer></dict></dict></dict>"
-}
-
-add_app_to_dock "/System/Library/CoreServices/Finder.app"
-add_app_to_dock "/System/Applications/App Store.app"
-add_app_to_dock "/Applications/Google Chrome.app"
-add_app_to_dock "/Applications/Spotify.app"
-add_app_to_dock "/System/Applications/System Settings.app"
-add_app_to_dock "/Applications/Visual Studio Code.app"
-add_app_to_dock "/Applications/Ghostty.app"
-
 # Finder
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 defaults write com.apple.finder AppleShowAllFiles -bool true

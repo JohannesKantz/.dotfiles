@@ -60,14 +60,14 @@ if ! command -v brew >/dev/null 2>&1; then
     exit 1
 fi
 
-brew update
 "$script_dir/packages.sh"
-brew cleanup
 
+# Keep private SSH files outside the repository; Stow only links the config.
 install -d -m 700 "$HOME/.ssh"
-mkdir -p "$HOME/dev"
 
 stow --dir "$repo_dir" --target "$HOME" --restow --verbose "${stow_packages[@]}"
+
+mise install
 
 "$script_dir/system-settings.sh"
 
