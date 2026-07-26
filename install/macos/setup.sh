@@ -15,6 +15,16 @@ usage() {
     printf '  --backup  Back up existing files that conflict with managed dotfiles.\n'
 }
 
+setup_failed() {
+    local exit_code=$?
+
+    trap - ERR
+    printf '\nFAILED: macOS setup stopped with exit code %s.\n' "$exit_code" >&2
+    printf 'Fix the error above, then run the same command again.\n' >&2
+    exit "$exit_code"
+}
+trap setup_failed ERR
+
 backup_conflicts=false
 while (($#)); do
     case "$1" in
@@ -48,7 +58,7 @@ printf 'Xcode Command Line Tools already installed.\n'
 printf 'Requesting administrator access once for the complete setup.\n'
 sudo -v
 while true; do
-    sudo -n true
+    sudo -n true || exit
     sleep 60
     kill -0 "$$" || exit
 done 2>/dev/null &
@@ -88,4 +98,5 @@ mise install
 
 "$script_dir/system-settings.sh"
 
-printf '\nmacOS setup complete. Restart your shell or reboot the machine.\n'
+printf '\nSUCCESS: macOS setup completed.\n'
+printf 'Restart your shell or reboot the machine.\n'
