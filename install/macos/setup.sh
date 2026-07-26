@@ -34,30 +34,6 @@ while (($#)); do
     shift
 done
 
-stow_packages=(
-    aliases
-    agents
-    bash
-    bat
-    btop
-    curl
-    fastfetch
-    functions
-    ghostty
-    git
-    kitty
-    macos
-    mise
-    neofetch
-    nvim
-    ripgrep
-    ssh
-    tmux
-    vim
-    wget
-    zsh
-)
-
 printf 'Setting up macOS\n\n'
 
 if ! xcode-select -p >/dev/null 2>&1; then
@@ -85,19 +61,18 @@ if ! command -v brew >/dev/null 2>&1; then
     exit 1
 fi
 
-"$script_dir/packages.sh"
-
-# Keep private SSH files outside the repository; Stow only links the config.
-install -d -m 700 "$HOME/.ssh"
-
-if [[ "$backup_conflicts" == true ]]; then
-    "$repo_dir/install/backup-conflicts.sh" \
-        "$repo_dir" \
-        "$HOME" \
-        "${stow_packages[@]}"
+if ! command -v stow >/dev/null 2>&1; then
+    printf 'Installing GNU Stow for dotfile linking.\n'
+    brew install stow
 fi
 
-stow --dir "$repo_dir" --target "$HOME" --restow --verbose "${stow_packages[@]}"
+if [[ "$backup_conflicts" == true ]]; then
+    "$repo_dir/install/link.sh" --backup
+else
+    "$repo_dir/install/link.sh"
+fi
+
+"$script_dir/packages.sh"
 
 mise install
 

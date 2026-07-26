@@ -5,14 +5,12 @@ usage() {
     printf 'Usage: %s [--dry-run|--backup]\n' "$0"
 }
 
-stow_options=()
 dry_run=false
 backup_conflicts=false
 case "${1:-}" in
     "")
         ;;
     --dry-run)
-        stow_options+=(--simulate)
         dry_run=true
         ;;
     --backup)
@@ -107,10 +105,19 @@ if [[ "$backup_conflicts" == true ]]; then
         "${packages[@]}"
 fi
 
-stow \
-    --dir "$repo_dir" \
-    --target "$HOME" \
-    --restow \
-    --verbose \
-    "${stow_options[@]}" \
-    "${packages[@]}"
+if [[ "$dry_run" == true ]]; then
+    stow \
+        --dir "$repo_dir" \
+        --target "$HOME" \
+        --restow \
+        --verbose \
+        --simulate \
+        "${packages[@]}"
+else
+    stow \
+        --dir "$repo_dir" \
+        --target "$HOME" \
+        --restow \
+        --verbose \
+        "${packages[@]}"
+fi
