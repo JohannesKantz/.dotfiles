@@ -11,15 +11,6 @@ os_version="$(sw_vers -productVersion)"
 printf 'Setting macOS system settings\n'
 printf 'Detected macOS version: %s\n\n' "$os_version"
 
-sudo -v
-while true; do
-    sudo -n true
-    sleep 60
-    kill -0 "$$" || exit
-done 2>/dev/null &
-sudo_keepalive_pid="$!"
-trap 'kill "$sudo_keepalive_pid" 2>/dev/null || true' EXIT
-
 osascript -e 'tell application "System Settings" to quit' >/dev/null 2>&1 || true
 
 if ! sudo nvram StartupMute=%01 2>/dev/null; then
@@ -98,10 +89,6 @@ defaults write org.mozilla.firefox AppleEnableSwipeNavigateWithScrolls -bool fal
 defaults write org.mozilla.firefox AppleEnableMouseSwipeNavigateWithScrolls -bool false
 defaults write org.mozilla.firefox-developer-edition AppleEnableSwipeNavigateWithScrolls -bool false
 defaults write org.mozilla.firefox-developer-edition AppleEnableMouseSwipeNavigateWithScrolls -bool false
-
-# Safari
-defaults write com.apple.Safari IncludeDevelopMenu -bool true
-defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
 
 # Activity Monitor
 defaults write com.apple.ActivityMonitor ShowCategory -int 0
